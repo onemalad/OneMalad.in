@@ -141,11 +141,11 @@ export default function HomePage() {
                 The civic platform where Malad residents raise issues, track real-time progress, and hold corporators accountable. Join the movement to build a better Malad.
               </p>
               <div className="flex flex-wrap gap-3 mb-8">
-                <Link href="/dashboard" className="px-7 py-3.5 bg-white text-gray-900 font-bold rounded-xl hover:shadow-xl hover:shadow-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
-                  Join OneMalad - Free <FiArrowRight />
-                </Link>
-                <Link href="/issues?action=raise" className="px-7 py-3.5 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-blue-500/20 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm border border-white/10">
+                <Link href="/issues?action=raise" className="px-7 py-3.5 bg-white text-gray-900 font-bold rounded-xl hover:shadow-xl hover:shadow-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
                   Raise an Issue <FiAlertCircle />
+                </Link>
+                <Link href="/wards" className="px-7 py-3.5 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-blue-500/20 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm border border-white/10">
+                  Explore Wards <FiArrowRight />
                 </Link>
               </div>
               <div className="flex items-center gap-5 text-sm text-blue-300/60">
@@ -828,7 +828,7 @@ export default function HomePage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-3">Why Join OneMalad?</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-3">Why OneMalad?</h2>
             <p className="text-gray-500 max-w-xl mx-auto">Be part of the change you want to see in your neighbourhood</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -864,17 +864,17 @@ export default function HomePage() {
                 Ready to Make a Difference?
               </h2>
               <p className="text-lg text-blue-100/80 max-w-2xl mx-auto mb-10">
-                Join OneMalad today. Raise issues, connect with your ward corporator, and help build the Malad we all deserve.
+                Raise issues, connect with your ward corporator, and help build the Malad we all deserve. No sign-up needed.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link href="/dashboard" className="px-8 py-4 bg-white text-gray-900 font-bold rounded-xl text-lg hover:shadow-2xl hover:shadow-white/20 transition-all hover:-translate-y-1 inline-flex items-center gap-2">
-                  Create Free Account <FiArrowRight />
+                <Link href="/issues?action=raise" className="px-8 py-4 bg-white text-gray-900 font-bold rounded-xl text-lg hover:shadow-2xl hover:shadow-white/20 transition-all hover:-translate-y-1 inline-flex items-center gap-2">
+                  Raise an Issue <FiAlertCircle />
                 </Link>
                 <Link href="/wards" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg border border-white/20 hover:bg-white/20 transition-all inline-flex items-center gap-2">
                   Explore Wards <FiMapPin />
                 </Link>
               </div>
-              <p className="text-sm text-blue-200/50 mt-6">Takes 30 seconds. No credit card needed.</p>
+              <p className="text-sm text-blue-200/50 mt-6">No account needed. Just fill in your details and submit.</p>
             </div>
           </div>
         </div>
