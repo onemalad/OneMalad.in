@@ -26,6 +26,8 @@ export default function DashboardPage() {
   const [name, setName] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [verifyEmailSent, setVerifyEmailSent] = useState(false);
+  const [verifyEmailAddress, setVerifyEmailAddress] = useState('');
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,9 +37,16 @@ export default function DashboardPage() {
         await signInWithEmail(email, password);
       } else {
         await signUpWithEmail(email, password, name);
+        // Sign-up successful — show verify email screen
+        setVerifyEmailAddress(email);
+        setVerifyEmailSent(true);
       }
     } catch (err: any) {
-      toast.error(err.message || 'Authentication failed');
+      // Check if it's an unverified email error
+      if (err.message === 'Email not verified') {
+        setVerifyEmailAddress(email);
+        setVerifyEmailSent(true);
+      }
     }
     setAuthLoading(false);
   };
@@ -68,6 +77,51 @@ export default function DashboardPage() {
 
   // Not logged in - show auth forms
   if (!user) {
+    // Show "Verify Your Email" screen after sign-up or unverified sign-in
+    if (verifyEmailSent) {
+      return (
+        <>
+          <section className="page-header-gradient">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+              <h1 className="text-3xl font-bold mb-2">Verify Your Email</h1>
+              <p className="opacity-90">One last step to activate your account</p>
+            </div>
+          </section>
+          <section className="py-12">
+            <div className="max-w-md mx-auto px-4">
+              <div className="card p-8 text-center">
+                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <FiMail className="text-4xl text-blue-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Check Your Inbox</h3>
+                <p className="text-sm text-gray-500 mb-2">
+                  We&apos;ve sent a verification link to:
+                </p>
+                <p className="font-semibold text-gray-800 mb-6">{verifyEmailAddress}</p>
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-left">
+                  <p className="text-sm text-blue-800 font-medium mb-2">What to do:</p>
+                  <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+                    <li>Open your email inbox</li>
+                    <li>Click the verification link from OneMalad</li>
+                    <li>Come back here and sign in</li>
+                  </ol>
+                </div>
+                <p className="text-xs text-gray-400 mb-5">
+                  Don&apos;t see it? Check your spam folder. The email comes from OneMalad.
+                </p>
+                <button
+                  onClick={() => { setVerifyEmailSent(false); setIsLogin(true); }}
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-teal-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+                >
+                  Go to Sign In
+                </button>
+              </div>
+            </div>
+          </section>
+        </>
+      );
+    }
+
     return (
       <>
         <section className="page-header-gradient">
