@@ -9,7 +9,6 @@ import { wardsData, getCorporatorByWard } from '@/data/wards';
 import { useStore } from '@/hooks/useStore';
 import { useAuth } from '@/context/AuthContext';
 import { toggleSupport, subscribeToSupportCount, hasUserSupported, isFirebaseConfigured, WardUpdate, subscribeToWardUpdates } from '@/lib/firestore';
-import PromoBanner from '@/components/ui/PromoBanner';
 import dynamic from 'next/dynamic';
 const MaladMap = dynamic(() => import('@/components/ui/MaladMap'), {
   loading: () => <div className="h-[350px] bg-gray-100 rounded-2xl animate-pulse" />,
@@ -213,9 +212,6 @@ export default function WardDetailClient() {
                   </button>
                 </div>
               )}
-
-              {/* Sidebar Ad */}
-              <PromoBanner placement="sidebar" />
 
               {/* Ward Info */}
               <div className="card p-6">

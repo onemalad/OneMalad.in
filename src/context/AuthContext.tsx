@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
   updateProfile,
   signOut,
   User as FirebaseUser,
@@ -156,12 +157,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      if (!cred.user.emailVerified) {
+        await sendEmailVerification(cred.user);
+        await signOut(auth);
+        setUser(null);
+        toast.error('Please verify your email first. A new verification link has been sent.');
+        throw new Error('Email not verified');
+      }
       toast.success('Signed in successfully!');
     } catch (err: unknown) {
       console.error('Sign-in error:', err);
       const message = err instanceof Error ? err.message : 'Sign-in failed';
-      toast.error(message);
+      if (message !== 'Email not verified') {
+        toast.error(message);
+      }
       throw err;
     }
   };
@@ -174,7 +184,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: name });
-      // Manually build profile since onAuthStateChanged may fire before updateProfile completes
+      // Send email verification
+      await sendEmailVerification(cred.user);
+      // Create Firestore profile
       const role: UserRole = email === 'onemaladconnect@gmail.com' ? 'admin' : 'citizen';
       const profile = {
         email: cred.user.email || '',
@@ -183,8 +195,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         createdAt: new Date().toISOString(),
       };
       await setDoc(doc(db, 'users', cred.user.uid), profile);
-      setUser({ uid: cred.user.uid, ...profile });
-      toast.success('Account created successfully!');
+      // Sign out until email is verified
+      await signOut(auth);
+      setUser(null);
+      toast.success('Account created! Please check your email and verify before signing in.');
     } catch (err: unknown) {
       console.error('Sign-up error:', err);
       const message = err instanceof Error ? err.message : 'Sign-up failed';

@@ -1,16 +1,9 @@
 import Link from 'next/link';
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import { FaXTwitter, FaInstagram, FaFacebookF, FaYoutube } from 'react-icons/fa6';
-import PromoBanner from '@/components/ui/PromoBanner';
-
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400">
-      {/* Footer Promo Banner */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 -mb-4">
-        <PromoBanner placement="footer" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}

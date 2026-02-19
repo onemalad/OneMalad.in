@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { FiClock, FiMapPin, FiUsers, FiCalendar } from 'react-icons/fi';
 import { useStore } from '@/hooks/useStore';
 import { EventCategory } from '@/types';
-import PromoBanner from '@/components/ui/PromoBanner';
 
 const categoryBadge: Record<string, string> = {
   social: 'bg-green-100 text-green-700',
@@ -64,11 +63,6 @@ export default function EventsPage() {
                 {f.label}
               </button>
             ))}
-          </div>
-
-          {/* Promo Banner */}
-          <div className="mb-8">
-            <PromoBanner placement="hero" />
           </div>
 
           {/* Upcoming Events */}

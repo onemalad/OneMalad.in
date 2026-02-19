@@ -10,7 +10,6 @@ import { wardsData, getCorporatorByWard } from '@/data/wards';
 import { IssueCategory, IssueStatus, Issue } from '@/types';
 import { isFirebaseConfigured } from '@/lib/firestore';
 import { uploadIssueImages } from '@/lib/storage';
-import PromoBanner from '@/components/ui/PromoBanner';
 import toast from 'react-hot-toast';
 
 const categoryColors: Record<string, string> = {
@@ -208,11 +207,6 @@ function IssuesContent() {
             >
               <HiPlus className="text-lg" /> Raise an Issue
             </button>
-          </div>
-
-          {/* Inline Promo Banner */}
-          <div className="mb-6">
-            <PromoBanner placement="inline" />
           </div>
 
           {/* Issues List */}

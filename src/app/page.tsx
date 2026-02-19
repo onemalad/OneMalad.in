@@ -8,7 +8,6 @@ import { wardsData, corporatorsData } from '@/data/wards';
 import { useStore } from '@/hooks/useStore';
 import { useAuth } from '@/context/AuthContext';
 import { isFirebaseConfigured, createThoughtInFirestore, subscribeToThoughts, Thought } from '@/lib/firestore';
-import PromoBanner from '@/components/ui/PromoBanner';
 import toast from 'react-hot-toast';
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -205,9 +204,6 @@ export default function HomePage() {
           <p className="text-sm text-amber-600 font-semibold mt-2">&mdash; {quote.author}</p>
         </div>
       </section>
-
-      {/* Hero Promo Banner */}
-      <PromoBanner placement="hero" />
 
       {/* Discover Malad - Blog Section */}
       <section className="py-16 sm:py-20 bg-white">
@@ -643,9 +639,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Inline Promo */}
-      <PromoBanner placement="inline" />
 
       {/* Share Your Thoughts */}
       <section className="py-16">

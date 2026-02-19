@@ -21,7 +21,9 @@
       "WebFetch(domain:www.tripadvisor.in)",
       "Bash(where:*)",
       "Bash(npx vercel:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

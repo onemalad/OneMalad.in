@@ -32,3 +32,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sensitive / non-code files
+one malad email.txt
+onemalad-pitch-guide.docx
+*.docx
