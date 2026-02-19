@@ -192,24 +192,30 @@ export default function WardDetailClient() {
                     ))}
                   </div>
 
-                  {/* I Support Button */}
-                  <button
-                    onClick={handleSupport}
-                    disabled={supportLoading}
-                    className={`w-full mt-5 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-                      hasSupported
-                        ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg shadow-pink-200'
-                        : 'bg-gray-50 text-gray-700 hover:bg-pink-50 hover:text-pink-600 border border-gray-200 hover:border-pink-300'
-                    }`}
-                  >
-                    <FiHeart className={hasSupported ? 'fill-current' : ''} />
-                    {hasSupported ? `You Support ${corporator.name.split(' ')[0]}` : `I Support ${corporator.name.split(' ')[0]}`}
-                    {supportCount > 0 && (
-                      <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${hasSupported ? 'bg-white/20' : 'bg-gray-200'}`}>
-                        {supportCount}
-                      </span>
-                    )}
-                  </button>
+                  {/* I Support Button — only for logged-in users */}
+                  {user ? (
+                    <button
+                      onClick={handleSupport}
+                      disabled={supportLoading}
+                      className={`w-full mt-5 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
+                        hasSupported
+                          ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg shadow-pink-200'
+                          : 'bg-gray-50 text-gray-700 hover:bg-pink-50 hover:text-pink-600 border border-gray-200 hover:border-pink-300'
+                      }`}
+                    >
+                      <FiHeart className={hasSupported ? 'fill-current' : ''} />
+                      {hasSupported ? `You Support ${corporator.name.split(' ')[0]}` : `I Support ${corporator.name.split(' ')[0]}`}
+                      {supportCount > 0 && (
+                        <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${hasSupported ? 'bg-white/20' : 'bg-gray-200'}`}>
+                          {supportCount}
+                        </span>
+                      )}
+                    </button>
+                  ) : supportCount > 0 ? (
+                    <div className="mt-5 flex items-center justify-center gap-2 text-sm text-gray-400">
+                      <FiHeart /> {supportCount} supporter{supportCount !== 1 ? 's' : ''}
+                    </div>
+                  ) : null}
                 </div>
               )}
 

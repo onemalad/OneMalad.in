@@ -23,10 +23,10 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: FaXTwitter, href: '#' },
-                { icon: FaInstagram, href: '#' },
-                { icon: FaFacebookF, href: '#' },
-                { icon: FaYoutube, href: '#' },
+                { icon: FaXTwitter, href: 'https://x.com/onemalad' },
+                { icon: FaInstagram, href: 'https://instagram.com/onemalad' },
+                { icon: FaFacebookF, href: 'https://facebook.com/onemalad' },
+                { icon: FaYoutube, href: 'https://youtube.com/@onemalad' },
               ].map((social, i) => (
                 <a
                   key={i}
@@ -93,7 +93,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5 text-sm">
                 <FiPhone className="text-base flex-shrink-0" />
-                +91 98XX XXX XXX
+                +91 99207 66971
               </li>
             </ul>
           </div>

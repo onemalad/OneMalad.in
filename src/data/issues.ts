@@ -15,8 +15,8 @@ export const sampleIssues: Issue[] = [
     userEmail: 'rahul@example.com',
     userPhone: '9876543210',
     upvotes: 47,
-    createdAt: '2025-12-15T10:30:00Z',
-    updatedAt: '2026-01-20T14:00:00Z',
+    createdAt: '2026-02-05T10:30:00Z',
+    updatedAt: '2026-02-12T14:00:00Z',
     corporatorResponse: 'We have initiated a drain cleaning drive. Work is in progress.',
   },
   {
@@ -33,8 +33,8 @@ export const sampleIssues: Issue[] = [
     userEmail: 'priya@example.com',
     userPhone: '9876543211',
     upvotes: 32,
-    createdAt: '2026-01-28T08:15:00Z',
-    updatedAt: '2026-01-28T08:15:00Z',
+    createdAt: '2026-02-10T08:15:00Z',
+    updatedAt: '2026-02-10T08:15:00Z',
   },
   {
     id: 'issue-3',
@@ -50,8 +50,8 @@ export const sampleIssues: Issue[] = [
     userEmail: 'mohammed@example.com',
     userPhone: '9876543212',
     upvotes: 56,
-    createdAt: '2026-01-10T12:00:00Z',
-    updatedAt: '2026-01-10T12:00:00Z',
+    createdAt: '2026-02-03T12:00:00Z',
+    updatedAt: '2026-02-03T12:00:00Z',
   },
   {
     id: 'issue-4',
@@ -67,8 +67,8 @@ export const sampleIssues: Issue[] = [
     userEmail: 'sunita@example.com',
     userPhone: '9876543213',
     upvotes: 38,
-    createdAt: '2026-01-05T09:45:00Z',
-    updatedAt: '2026-02-01T11:30:00Z',
+    createdAt: '2026-02-01T09:45:00Z',
+    updatedAt: '2026-02-15T11:30:00Z',
     corporatorResponse: 'BMC water department has been notified. Pipeline repair work has started.',
   },
   {
@@ -85,9 +85,9 @@ export const sampleIssues: Issue[] = [
     userEmail: 'anil@example.com',
     userPhone: '9876543214',
     upvotes: 25,
-    createdAt: '2025-12-20T16:00:00Z',
-    updatedAt: '2026-01-15T10:00:00Z',
-    resolvedAt: '2026-01-15T10:00:00Z',
+    createdAt: '2026-01-20T16:00:00Z',
+    updatedAt: '2026-02-10T10:00:00Z',
+    resolvedAt: '2026-02-10T10:00:00Z',
     corporatorResponse: 'All street lights have been repaired and are now functional.',
   },
   {
@@ -104,8 +104,8 @@ export const sampleIssues: Issue[] = [
     userEmail: 'deepak@example.com',
     userPhone: '9876543215',
     upvotes: 41,
-    createdAt: '2026-02-01T14:30:00Z',
-    updatedAt: '2026-02-01T14:30:00Z',
+    createdAt: '2026-02-14T14:30:00Z',
+    updatedAt: '2026-02-14T14:30:00Z',
   },
 ];
 
