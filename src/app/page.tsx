@@ -240,14 +240,14 @@ export default function HomePage() {
               },
               {
                 step: '02',
-                title: 'Track Progress',
-                desc: 'Follow real-time status updates as your corporator and BMC work on resolving the issue.',
+                title: 'Get Formal Letter',
+                desc: 'A formal complaint letter with a unique reference number is auto-generated and addressed to your ward corporator.',
                 color: 'from-teal-500 to-teal-600',
               },
               {
                 step: '03',
                 title: 'See Results',
-                desc: 'Get a formal complaint letter auto-generated. Corporators respond and resolve issues transparently.',
+                desc: 'Your issue is publicly listed on the Issues page. Corporators respond and update the status for everyone to see.',
                 color: 'from-cyan-500 to-cyan-600',
               },
             ].map((item) => (
