@@ -87,69 +87,100 @@ export default function HomePage() {
 
   return (
     <>
-      {/* 1. Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white relative overflow-hidden min-h-[85vh] flex items-center">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
+      {/* 1. Hero Section — Bright & Modern */}
+      <section className="relative overflow-hidden bg-white">
+        {/* Decorative background shapes */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-100 via-teal-50 to-transparent rounded-full opacity-70" />
+          <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-gradient-to-tr from-amber-50 via-orange-50 to-transparent rounded-full opacity-60" />
+          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50" />
         </div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjZykiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiLz48L3N2Zz4=')] opacity-40" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-24 relative w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-10 sm:pb-14 relative">
+          <div className="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-center">
+            {/* Left — Content */}
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/10 mb-8">
-                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-emerald-200">Serving Malad Wards 32, 33, 34, 48, 49</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-200 mb-7">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-emerald-700">Serving Malad Wards 32, 33, 34, 48, 49</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] mb-6">
+
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.08] mb-6 text-gray-900">
                 Building a Better{' '}
-                <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
-                  Malad, Together
+                <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+                  Malad,
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
+                  Together.
                 </span>
               </h1>
-              <p className="text-lg text-emerald-200/80 mb-8 leading-relaxed max-w-xl">
-                OneMalad Foundation serves the people of Malad through community service, health camps, cleanliness drives, food distribution, and grassroots initiatives. Join us in making a difference.
+
+              <p className="text-lg text-gray-500 mb-8 leading-relaxed max-w-xl">
+                OneMalad Foundation serves through community service, health camps, cleanliness drives, food distribution, and grassroots initiatives. Join us.
               </p>
+
               <div className="flex flex-wrap gap-3 mb-8">
-                <Link href="/our-work" className="px-7 py-3.5 bg-white text-gray-900 font-bold rounded-xl hover:shadow-xl hover:shadow-white/10 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
-                  Our Work <FiArrowRight />
+                <Link href="/our-work" className="px-7 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-200/60 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
+                  Explore Our Work <FiArrowRight />
                 </Link>
-                <Link href="/volunteer" className="px-7 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-500/20 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm border border-white/10">
-                  Get Involved <FiHeart />
+                <Link href="/volunteer" className="px-7 py-3.5 bg-white text-gray-800 font-bold rounded-xl border-2 border-gray-200 hover:border-emerald-300 hover:shadow-lg transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
+                  <FiHeart className="text-rose-500" /> Get Involved
                 </Link>
               </div>
-              <div className="flex items-center gap-5 text-sm text-emerald-300/60">
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-400" /> 100% volunteer-driven</span>
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-400" /> 5 wards served</span>
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-400" /> Open to all</span>
+
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400">
+                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 100% volunteer-driven</span>
+                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 5 wards served</span>
+                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> Open to all</span>
               </div>
             </div>
 
-            <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                {impactStats.slice(0, 4).map((stat) => (
-                  <div key={stat.id} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/15 hover:scale-105 transition-transform duration-300">
-                    <span className="text-2xl mb-3 block">{stat.emoji}</span>
-                    <div className="text-3xl font-extrabold text-white mb-1">{stat.value.toLocaleString()}{stat.suffix}</div>
-                    <p className="text-sm text-emerald-200/60">{stat.label}</p>
-                  </div>
-                ))}
+            {/* Right — Floating Stat Cards */}
+            <div className="hidden lg:block relative h-[420px]">
+              {/* Decorative ring */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-80 h-80 rounded-full border-2 border-dashed border-emerald-100 animate-[spin_30s_linear_infinite]" />
               </div>
+
+              {/* Stat cards floating at different positions */}
+              {impactStats.slice(0, 4).map((stat, i) => {
+                const positions = [
+                  'top-0 left-4',
+                  'top-2 right-0',
+                  'bottom-8 left-0',
+                  'bottom-4 right-6',
+                ];
+                const delays = ['0s', '0.5s', '1s', '1.5s'];
+                return (
+                  <div
+                    key={stat.id}
+                    className={`absolute ${positions[i]} animate-float bg-white rounded-2xl p-5 shadow-xl shadow-gray-200/50 border border-gray-100 w-[180px] hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-default`}
+                    style={{ animationDelay: delays[i] }}
+                  >
+                    <span className="text-2xl block mb-2">{stat.emoji}</span>
+                    <div className="text-2xl font-extrabold text-gray-800">{stat.value.toLocaleString()}{stat.suffix}</div>
+                    <p className="text-xs text-gray-400 font-medium mt-0.5">{stat.label}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Mobile Stats */}
-          <div className="grid grid-cols-3 gap-3 mt-10 lg:hidden">
-            {impactStats.slice(0, 3).map((stat) => (
-              <div key={stat.id} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10 text-center">
-                <div className="text-xl font-extrabold">{stat.value.toLocaleString()}{stat.suffix}</div>
-                <p className="text-[10px] text-emerald-200/70 mt-0.5">{stat.label}</p>
+          {/* Mobile Stats — Horizontal scroll */}
+          <div className="flex gap-3 mt-8 pb-2 overflow-x-auto lg:hidden scrollbar-hide">
+            {impactStats.slice(0, 4).map((stat) => (
+              <div key={stat.id} className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-md shadow-gray-100 border border-gray-100 min-w-[140px] text-center">
+                <span className="text-xl block mb-1">{stat.emoji}</span>
+                <div className="text-xl font-extrabold text-gray-800">{stat.value.toLocaleString()}{stat.suffix}</div>
+                <p className="text-[10px] text-gray-400 font-medium mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Bottom gradient divider */}
+        <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400" />
       </section>
 
       {/* 2. Daily Quote */}
