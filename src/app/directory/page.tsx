@@ -15,7 +15,16 @@ const categoryBadge: Record<BusinessCategory, string> = {
   electronics: 'bg-blue-100 text-blue-700',
   clothing: 'bg-purple-100 text-purple-700',
   hardware: 'bg-slate-100 text-slate-700',
+  jewellery: 'bg-yellow-100 text-yellow-700',
+  stationery: 'bg-indigo-100 text-indigo-700',
+  pet: 'bg-lime-100 text-lime-700',
+  furniture: 'bg-stone-100 text-stone-700',
   services: 'bg-teal-100 text-teal-700',
+  bank: 'bg-sky-100 text-sky-700',
+  contractor: 'bg-zinc-100 text-zinc-700',
+  resort: 'bg-cyan-100 text-cyan-700',
+  decorator: 'bg-fuchsia-100 text-fuchsia-700',
+  gym: 'bg-rose-100 text-rose-700',
   other: 'bg-gray-100 text-gray-700',
 };
 

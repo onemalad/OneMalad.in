@@ -101,7 +101,16 @@ export type BusinessCategory =
   | 'electronics'
   | 'clothing'
   | 'hardware'
+  | 'jewellery'
+  | 'stationery'
+  | 'pet'
+  | 'furniture'
   | 'services'
+  | 'bank'
+  | 'contractor'
+  | 'resort'
+  | 'decorator'
+  | 'gym'
   | 'other';
 
 export interface Business {
