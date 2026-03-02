@@ -20,7 +20,6 @@ export default function Navbar() {
     { href: '/our-work', label: 'Our Work' },
     { href: '/wards', label: 'Wards' },
     { href: '/events', label: 'Events' },
-    { href: '/directory', label: 'Directory' },
     { href: '/helplines', label: 'Helplines' },
   ];
 

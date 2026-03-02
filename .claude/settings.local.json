@@ -23,7 +23,13 @@
       "Bash(npx vercel:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git rm:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "WebFetch(domain:onemalad.in)",
+      "Bash(npx tsc --noEmit --pretty)",
+      "Bash(npx tsc --noEmit src/app/helplines/page.tsx src/app/helplines/layout.tsx)"
     ]
   }
 }

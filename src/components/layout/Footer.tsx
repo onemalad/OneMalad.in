@@ -49,7 +49,6 @@ export default function Footer() {
                 { label: 'Events', href: '/events' },
                 { label: 'Gallery', href: '/gallery' },
                 { label: 'Volunteer', href: '/volunteer' },
-                { label: 'Business Directory', href: '/directory' },
                 { label: 'Emergency Helplines', href: '/helplines' },
                 { label: 'Blood Donors', href: '/blood-donors' },
               ].map((link) => (
