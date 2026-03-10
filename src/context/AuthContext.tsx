@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
   sendPasswordResetEmail,
   signOut,
   User as FirebaseUser,
@@ -29,6 +31,7 @@ interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, displayName: string, extra?: Record<string, string>) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   demoSignIn: (role: UserRole) => void;
   logout: () => void;
@@ -140,6 +143,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleSignUpWithEmail = async (email: string, password: string, displayName: string, extra?: Record<string, string>) => {
+    if (!firebaseReady) {
+      toast.error('Firebase not configured. Use Demo Login below.');
+      return;
+    }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName });
+      // Save extra info (phone, area) to Firestore
+      const userRef = doc(db, 'users', cred.user.uid);
+      await setDoc(userRef, {
+        email,
+        displayName,
+        role: 'volunteer',
+        phone: extra?.phone || '',
+        area: extra?.area || '',
+        source: 'directory_signup',
+        createdAt: new Date().toISOString(),
+      });
+      toast.success('Account created! Welcome to OneMalad.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Sign-up failed';
+      toast.error(message);
+      throw err;
+    }
+  };
+
   const handleSignInWithEmail = async (email: string, password: string) => {
     if (!firebaseReady) {
       toast.error('Firebase not configured. Use Demo Login below.');
@@ -196,6 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signInWithGoogle: handleSignInWithGoogle,
         signInWithEmail: handleSignInWithEmail,
+        signUpWithEmail: handleSignUpWithEmail,
         forgotPassword: handleForgotPassword,
         demoSignIn,
         logout: handleLogout,

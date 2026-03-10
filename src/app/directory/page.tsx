@@ -1,13 +1,70 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { businesses, businessCategories } from '@/data/businesses';
 import BusinessCard from '@/components/ui/BusinessCard';
-import { FiSearch } from 'react-icons/fi';
+import { useAuth } from '@/context/AuthContext';
+import { FiSearch, FiLock, FiArrowRight } from 'react-icons/fi';
 
 export default function DirectoryPage() {
+  const { user, loading, logout } = useAuth();
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
+      </div>
+    );
+  }
+
+  // Auth gate — redirect to signup if not logged in
+  if (!user) {
+    return (
+      <>
+        <section className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white py-14">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Malad Local</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Famous Local Businesses</h1>
+            <p className="text-sm opacity-90 max-w-lg mx-auto">
+              Your go-to directory for the best food stalls, cafes, salons, gyms, and hidden gems across Malad
+            </p>
+          </div>
+        </section>
+
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-md mx-auto px-4 text-center">
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-5">
+              <FiLock className="text-orange-500 text-2xl" />
+            </div>
+            <h2 className="text-2xl font-extrabold text-gray-800 mb-3">Sign Up to Explore</h2>
+            <p className="text-gray-500 text-sm mb-8">
+              Create a free account to access all {businesses.length} local businesses in Malad — food, cafes, salons, gyms & more.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/directory/signup"
+                className="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl inline-flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                Create Free Account <FiArrowRight />
+              </Link>
+              <Link
+                href="/directory/login"
+                className="px-8 py-3.5 bg-white text-gray-700 font-bold rounded-xl border-2 border-gray-200 inline-flex items-center justify-center gap-2 text-sm hover:border-orange-300 hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                Sign In
+              </Link>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   const filteredBusinesses = businesses.filter((biz) => {
     const matchesSearch =
@@ -17,7 +74,6 @@ export default function DirectoryPage() {
     return matchesSearch && matchesCategory;
   });
 
-  // Show featured businesses first
   const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
     if (a.featured && !b.featured) return -1;
     if (!a.featured && b.featured) return 1;
@@ -43,7 +99,13 @@ export default function DirectoryPage() {
               className="w-full pl-11 pr-4 py-3 rounded-xl bg-white text-gray-800 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
             />
           </div>
-          <p className="text-xs opacity-70 mt-4">{businesses.length} businesses listed</p>
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <p className="text-xs opacity-70">{businesses.length} businesses listed</p>
+            <span className="text-xs opacity-50">·</span>
+            <button onClick={() => { logout(); router.push('/directory/login'); }} className="text-xs opacity-70 hover:opacity-100 underline">
+              Sign Out
+            </button>
+          </div>
         </div>
       </section>
 
