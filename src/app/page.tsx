@@ -122,8 +122,8 @@ export default function HomePage() {
           <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-10 sm:pb-14 relative">
-          <div className="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-10 sm:pb-14 relative">
+          <div className="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-start">
             {/* Left — Content */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full border border-emerald-200/60 mb-7 shadow-sm">
@@ -176,19 +176,19 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="p-5">
-                  {businesses.filter(b => b.featured).map((biz) => (
+                <div className="p-5 space-y-3">
+                  {businesses.filter(b => b.featured).slice(0, 2).map((biz) => (
                     <BusinessCard key={biz.id} business={biz} variant="hero" />
                   ))}
 
                   <Link
-                    href="/directory"
-                    className="mt-4 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
+                    href="/volunteer"
+                    className="mt-2 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
                   >
-                    Explore All {businesses.length} Businesses →
+                    Sign Up to Explore All {businesses.length} Businesses →
                   </Link>
-                  <p className="text-[10px] text-gray-400 text-center mt-2">
-                    Free directory for Malad locals
+                  <p className="text-[10px] text-gray-400 text-center">
+                    Free signup to access the full directory
                   </p>
                 </div>
               </div>
