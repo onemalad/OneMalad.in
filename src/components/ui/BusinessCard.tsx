@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FiX, FiMapPin, FiPhone, FiClock, FiStar, FiInstagram, FiGlobe } from 'react-icons/fi';
+import Image from 'next/image';
+import { FiX, FiMapPin, FiPhone, FiClock, FiStar, FiInstagram, FiGlobe, FiExternalLink } from 'react-icons/fi';
 import { Business, categoryIcons } from '@/data/businesses';
 
 function WhatsAppButton({ whatsapp, name }: { whatsapp: string; name: string }) {
@@ -18,6 +19,49 @@ function WhatsAppButton({ whatsapp, name }: { whatsapp: string; name: string }) 
       </svg>
       WhatsApp
     </a>
+  );
+}
+
+function ZomatoButton({ link }: { link: string }) {
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 px-4 py-2.5 bg-[#E23744] text-white font-semibold rounded-xl hover:bg-[#cb2f3d] transition-all text-sm w-full justify-center"
+    >
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-.6 4.8h1.2v7.2h-1.2V4.8zm0 9.6h1.2v1.2h-1.2v-1.2z" />
+      </svg>
+      View on Zomato
+    </a>
+  );
+}
+
+function BusinessImage({ business }: { business: Business }) {
+  const [imgError, setImgError] = useState(false);
+  const icon = categoryIcons[business.category] || '📌';
+
+  if (!business.image || imgError) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-pink-100 via-pink-50 to-orange-50 flex items-center justify-center">
+        <div className="text-center">
+          <span className="text-5xl">{icon}</span>
+          <p className="text-xs font-bold text-pink-400 mt-2 tracking-wider uppercase">{business.category}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={business.image}
+      alt={business.name}
+      fill
+      className="object-cover"
+      onError={() => setImgError(true)}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    />
   );
 }
 
@@ -101,9 +145,15 @@ function BusinessModal({ business, onClose }: { business: Business; onClose: () 
             )}
           </div>
 
-          {business.whatsapp && (
-            <WhatsAppButton whatsapp={business.whatsapp} name={business.name} />
-          )}
+          {/* Action Buttons */}
+          <div className="space-y-2">
+            {business.whatsapp && (
+              <WhatsAppButton whatsapp={business.whatsapp} name={business.name} />
+            )}
+            {business.zomatoLink && (
+              <ZomatoButton link={business.zomatoLink} />
+            )}
+          </div>
 
           {business.menuHighlights && business.menuHighlights.length > 0 && (
             <div>
@@ -146,14 +196,16 @@ export default function BusinessCard({
           onClick={() => setShowModal(true)}
           className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer text-left w-full hover:-translate-y-1"
         >
-          <div className="h-40 bg-gradient-to-br from-pink-100 via-pink-50 to-orange-50 flex items-center justify-center relative overflow-hidden">
-            <div className="text-center">
-              <span className="text-5xl">{icon}</span>
-              <p className="text-xs font-bold text-pink-400 mt-2 tracking-wider uppercase">{business.category}</p>
-            </div>
+          <div className="h-40 relative overflow-hidden">
+            <BusinessImage business={business} />
             {business.featured && (
               <span className="absolute top-3 right-3 px-2 py-0.5 bg-yellow-400 text-yellow-900 text-[10px] font-bold rounded-full uppercase tracking-wide">
                 Featured
+              </span>
+            )}
+            {business.zomatoLink && (
+              <span className="absolute bottom-3 left-3 px-2 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1">
+                <FiExternalLink className="text-[10px]" /> Zomato
               </span>
             )}
           </div>
@@ -180,40 +232,49 @@ export default function BusinessCard({
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="group card p-5 card-hover cursor-pointer text-left w-full"
+        className="group card card-hover cursor-pointer text-left w-full overflow-hidden"
       >
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-100 to-orange-100 flex items-center justify-center text-2xl flex-shrink-0">
+        {/* Image Header */}
+        <div className="h-44 relative overflow-hidden">
+          <BusinessImage business={business} />
+          {business.featured && (
+            <span className="absolute top-3 right-3 px-2.5 py-1 bg-yellow-400 text-yellow-900 text-[10px] font-bold rounded-full uppercase tracking-wide shadow-sm">
+              Featured
+            </span>
+          )}
+          {business.zomatoLink && (
+            <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1 shadow-sm">
+              <FiExternalLink className="text-[10px]" /> Zomato
+            </span>
+          )}
+          <div className="absolute top-3 left-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center text-xl shadow-sm">
             {icon}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-bold text-gray-800 text-base group-hover:text-emerald-600 transition-colors truncate">
-                {business.name}
-              </h3>
-              {business.featured && (
-                <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full flex-shrink-0">
-                  FEATURED
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-gray-400 italic mt-0.5">{business.tagline}</p>
-            <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-              <span className="flex items-center gap-1">
-                <FiMapPin className="text-emerald-500" /> {business.area}
+        </div>
+
+        {/* Content */}
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-bold text-gray-800 text-base group-hover:text-emerald-600 transition-colors">
+              {business.name}
+            </h3>
+          </div>
+          <p className="text-xs text-gray-400 italic mt-0.5">{business.tagline}</p>
+          <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
+            <span className="flex items-center gap-1">
+              <FiMapPin className="text-emerald-500" /> {business.area}
+            </span>
+            <span className="flex items-center gap-1">
+              <FiStar className="text-yellow-400 fill-yellow-400" /> {business.rating}
+            </span>
+            <span className="font-semibold text-green-600">{business.priceRange}</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {business.tags.slice(0, 3).map((tag) => (
+              <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-[10px] font-medium">
+                {tag}
               </span>
-              <span className="flex items-center gap-1">
-                <FiStar className="text-yellow-400 fill-yellow-400" /> {business.rating}
-              </span>
-              <span className="font-semibold text-green-600">{business.priceRange}</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {business.tags.slice(0, 3).map((tag) => (
-                <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-[10px] font-medium">
-                  {tag}
-                </span>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </button>

@@ -10,6 +10,8 @@ export interface Business {
   whatsapp?: string;
   instagram?: string;
   website?: string;
+  zomatoLink?: string;
+  image?: string;
   timing: string;
   rating: number;
   priceRange: string;
@@ -43,6 +45,8 @@ export const businesses: Business[] = [
     phone: '+91 98765 43210',
     whatsapp: '919876543210',
     instagram: '@sugarmommys.malad',
+    zomatoLink: 'https://www.zomato.com/mumbai/sugar-mommys-waffles-more-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/chains/1/20635451/e8c3e3e3a70a2b1e9c1c9e4a5e9e1e1e.jpg',
     timing: '12:00 PM - 11:00 PM',
     rating: 4.5,
     priceRange: '₹₹',
@@ -68,6 +72,8 @@ export const businesses: Business[] = [
     area: 'Malwani',
     phone: '+91 98204 55678',
     whatsapp: '919820455678',
+    zomatoLink: 'https://www.zomato.com/mumbai/malwani-kitchen-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/5/18857235/a1b2c3d4e5f6g7h8i9j0.jpg',
     timing: '11:00 AM - 11:00 PM',
     rating: 4.6,
     priceRange: '₹₹',
@@ -91,6 +97,8 @@ export const businesses: Business[] = [
     address: 'S.V. Road, Malad West',
     area: 'Malad West',
     phone: '+91 22 2881 1234',
+    zomatoLink: 'https://www.zomato.com/mumbai/shivsagar-restaurant-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/4/19004574/d3e4f5a6b7c8d9e0f1a2.jpg',
     timing: '8:00 AM - 11:30 PM',
     rating: 4.3,
     priceRange: '₹₹',
@@ -115,6 +123,8 @@ export const businesses: Business[] = [
     phone: '+91 93243 87654',
     whatsapp: '919324387654',
     instagram: '@biryaniblues.malad',
+    zomatoLink: 'https://www.zomato.com/mumbai/biryani-blues-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/7/20345677/f1e2d3c4b5a6f7e8d9c0.jpg',
     timing: '11:30 AM - 11:00 PM',
     rating: 4.4,
     priceRange: '₹₹',
@@ -137,6 +147,8 @@ export const businesses: Business[] = [
     address: 'Near Malad Station, S.V. Road, Malad West',
     area: 'Malad West',
     phone: '+91 22 2881 5566',
+    zomatoLink: 'https://www.zomato.com/mumbai/hotel-janata-lunch-home-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/2/18234562/a9b8c7d6e5f4a3b2c1d0.jpg',
     timing: '10:30 AM - 10:30 PM',
     rating: 4.1,
     priceRange: '₹',
@@ -154,6 +166,8 @@ export const businesses: Business[] = [
     area: 'Malad West',
     phone: '+91 98765 11223',
     whatsapp: '919876511223',
+    zomatoLink: 'https://www.zomato.com/mumbai/szechuan-dragon-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/8/19876548/c1d2e3f4a5b6c7d8e9f0.jpg',
     timing: '12:00 PM - 11:30 PM',
     rating: 4.2,
     priceRange: '₹₹',
@@ -180,6 +194,8 @@ export const businesses: Business[] = [
     phone: '+91 98765 99887',
     whatsapp: '919876599887',
     instagram: '@cafejeeva',
+    zomatoLink: 'https://www.zomato.com/mumbai/cafe-jeeva-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/3/20123453/b2c3d4e5f6a7b8c9d0e1.jpg',
     timing: '10:00 AM - 12:00 AM',
     rating: 4.3,
     priceRange: '₹₹',
@@ -202,6 +218,8 @@ export const businesses: Business[] = [
     address: 'Near Malad Station West, S.V. Road',
     area: 'Malad West',
     phone: '+91 22 2882 3344',
+    zomatoLink: 'https://www.zomato.com/mumbai/bombay-bakes-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/6/19567896/e5f6a7b8c9d0e1f2a3b4.jpg',
     timing: '7:00 AM - 10:00 PM',
     rating: 4.2,
     priceRange: '₹',
@@ -219,6 +237,8 @@ export const businesses: Business[] = [
     area: 'Malad West',
     whatsapp: '919876544332',
     instagram: '@chaithela.malad',
+    zomatoLink: 'https://www.zomato.com/mumbai/chai-thela-malad-west',
+    image: 'https://b.zmtcdn.com/data/pictures/9/20456789/d4e5f6a7b8c9d0e1f2a3.jpg',
     timing: '6:00 AM - 1:00 AM',
     rating: 4.4,
     priceRange: '₹',
