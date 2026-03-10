@@ -11,6 +11,7 @@ export interface Business {
   instagram?: string;
   website?: string;
   zomatoLink?: string;
+  swiggyLink?: string;
   image?: string;
   timing: string;
   rating: number;
@@ -46,6 +47,7 @@ export const businesses: Business[] = [
     whatsapp: '919876543210',
     instagram: '@sugarmommys.malad',
     zomatoLink: 'https://www.zomato.com/mumbai/sugar-mommys-waffles-more-malad-west',
+    swiggyLink: 'https://www.swiggy.com/city/mumbai/sugar-mommys-waffles-and-more-borivali-rest1233711',
     image: 'https://b.zmtcdn.com/data/pictures/chains/1/20635451/e8c3e3e3a70a2b1e9c1c9e4a5e9e1e1e.jpg',
     timing: '12:00 PM - 11:00 PM',
     rating: 4.5,

@@ -38,6 +38,22 @@ function ZomatoButton({ link }: { link: string }) {
   );
 }
 
+function SwiggyButton({ link }: { link: string }) {
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 px-4 py-2.5 bg-[#FC8019] text-white font-semibold rounded-xl hover:bg-[#e5730f] transition-all text-sm w-full justify-center"
+    >
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2v-6h2v6zm-2-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
+      </svg>
+      Order on Swiggy
+    </a>
+  );
+}
+
 function BusinessImage({ business }: { business: Business }) {
   const [imgError, setImgError] = useState(false);
   const icon = categoryIcons[business.category] || '📌';
@@ -153,6 +169,9 @@ function BusinessModal({ business, onClose }: { business: Business; onClose: () 
             {business.zomatoLink && (
               <ZomatoButton link={business.zomatoLink} />
             )}
+            {business.swiggyLink && (
+              <SwiggyButton link={business.swiggyLink} />
+            )}
           </div>
 
           {business.menuHighlights && business.menuHighlights.length > 0 && (
@@ -203,11 +222,18 @@ export default function BusinessCard({
                 Featured
               </span>
             )}
-            {business.zomatoLink && (
-              <span className="absolute bottom-3 left-3 px-2 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1">
-                <FiExternalLink className="text-[10px]" /> Zomato
-              </span>
-            )}
+            <div className="absolute bottom-3 left-3 flex gap-1.5">
+              {business.zomatoLink && (
+                <span className="px-2 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1">
+                  <FiExternalLink className="text-[10px]" /> Zomato
+                </span>
+              )}
+              {business.swiggyLink && (
+                <span className="px-2 py-1 bg-[#FC8019] text-white text-[10px] font-bold rounded-full flex items-center gap-1">
+                  <FiExternalLink className="text-[10px]" /> Swiggy
+                </span>
+              )}
+            </div>
           </div>
           <div className="p-4">
             <h3 className="font-extrabold text-gray-800 text-sm leading-tight group-hover:text-pink-600 transition-colors">
@@ -242,11 +268,18 @@ export default function BusinessCard({
               Featured
             </span>
           )}
-          {business.zomatoLink && (
-            <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1 shadow-sm">
-              <FiExternalLink className="text-[10px]" /> Zomato
-            </span>
-          )}
+          <div className="absolute bottom-3 left-3 flex gap-1.5">
+            {business.zomatoLink && (
+              <span className="px-2.5 py-1 bg-[#E23744] text-white text-[10px] font-bold rounded-full flex items-center gap-1 shadow-sm">
+                <FiExternalLink className="text-[10px]" /> Zomato
+              </span>
+            )}
+            {business.swiggyLink && (
+              <span className="px-2.5 py-1 bg-[#FC8019] text-white text-[10px] font-bold rounded-full flex items-center gap-1 shadow-sm">
+                <FiExternalLink className="text-[10px]" /> Swiggy
+              </span>
+            )}
+          </div>
           <div className="absolute top-3 left-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center text-xl shadow-sm">
             {icon}
           </div>
