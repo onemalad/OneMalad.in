@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FiArrowRight, FiMapPin, FiUsers, FiCheckCircle, FiCalendar, FiHeart, FiZap } from 'react-icons/fi';
+import { FiArrowRight, FiMapPin, FiUsers, FiCheckCircle, FiCalendar, FiHeart, FiZap, FiPhone, FiDroplet, FiShield } from 'react-icons/fi';
 import { HiOutlineLocationMarker, HiOutlineSparkles } from 'react-icons/hi';
 
 const heroRotatingTexts = [
@@ -157,10 +157,50 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400 mb-8">
                 <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 100% volunteer-driven</span>
                 <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 5 wards served</span>
                 <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> Open to all</span>
+              </div>
+
+              {/* Quick Access Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/helplines" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 hover:shadow-md transition-all hover:-translate-y-0.5">
+                  <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <FiPhone className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-800">Helplines</p>
+                    <p className="text-[11px] text-gray-400">Emergency contacts</p>
+                  </div>
+                </Link>
+                <Link href="/blood-donors" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl border border-rose-100 hover:shadow-md transition-all hover:-translate-y-0.5">
+                  <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <FiDroplet className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-800">Blood Donors</p>
+                    <p className="text-[11px] text-gray-400">Find donors nearby</p>
+                  </div>
+                </Link>
+                <Link href="/corporators" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-100 hover:shadow-md transition-all hover:-translate-y-0.5">
+                  <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <FiShield className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-800">Corporators</p>
+                    <p className="text-[11px] text-gray-400">Your ward leaders</p>
+                  </div>
+                </Link>
+                <Link href="/wards" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100 hover:shadow-md transition-all hover:-translate-y-0.5">
+                  <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <FiMapPin className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-800">Wards</p>
+                    <p className="text-[11px] text-gray-400">Explore all 5 wards</p>
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -182,13 +222,13 @@ export default function HomePage() {
                   ))}
 
                   <Link
-                    href="/volunteer"
+                    href="/directory/signup"
                     className="mt-2 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
                   >
                     Sign Up to Explore All {businesses.length} Businesses →
                   </Link>
                   <p className="text-[10px] text-gray-400 text-center">
-                    Free signup to access the full directory
+                    Free signup · No spam · Instant access
                   </p>
                 </div>
               </div>
