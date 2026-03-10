@@ -1,0 +1,474 @@
+export interface Business {
+  id: string;
+  name: string;
+  tagline: string;
+  category: 'food' | 'cafe' | 'salon' | 'gym' | 'shop' | 'service' | 'entertainment' | 'other';
+  description: string;
+  address: string;
+  area: string;
+  phone?: string;
+  whatsapp?: string;
+  instagram?: string;
+  website?: string;
+  timing: string;
+  rating: number;
+  priceRange: string;
+  featured: boolean;
+  menuHighlights?: string[];
+  tags: string[];
+}
+
+export const categoryIcons: Record<string, string> = {
+  food: '🍔',
+  cafe: '☕',
+  salon: '💇',
+  gym: '💪',
+  shop: '🛍️',
+  service: '🔧',
+  entertainment: '🎮',
+  other: '📌',
+};
+
+export const businesses: Business[] = [
+  // === FOOD & RESTAURANTS ===
+  {
+    id: 'sugar-mommys',
+    name: "Sugar Mommy's Waffles & More",
+    tagline: 'Yummy Yummy come to Mommy!',
+    category: 'food',
+    description:
+      "Sugar Mommy's is Malad's favorite waffle destination, serving crispy golden waffles loaded with toppings, shakes, and desserts. Known for their signature heart-shaped waffles and over-the-top dessert creations that are as Instagram-worthy as they are delicious.",
+    address: 'Shop 3, Ground Floor, Evershine Nagar, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 43210',
+    whatsapp: '919876543210',
+    instagram: '@sugarmommys.malad',
+    timing: '12:00 PM - 11:00 PM',
+    rating: 4.5,
+    priceRange: '₹₹',
+    featured: true,
+    menuHighlights: [
+      'Classic Belgian Waffle - ₹180',
+      'Nutella Overload Waffle - ₹250',
+      'Red Velvet Waffle - ₹220',
+      'Cookie Monster Shake - ₹200',
+      'Oreo Crunch Waffle - ₹230',
+      'Strawberry Cheesecake Waffle - ₹260',
+    ],
+    tags: ['Waffles', 'Desserts', 'Shakes', 'Late Night', 'Instagram-worthy'],
+  },
+  {
+    id: 'malwani-kitchen',
+    name: 'Malwani Kitchen',
+    tagline: 'Authentic Malwani flavours since 1985',
+    category: 'food',
+    description:
+      'The OG Malwani food destination. Famous for their spicy Malwani chicken, surmai fry, and sol kadhi. A must-visit for anyone craving authentic coastal Maharashtrian food in the heart of Malwani.',
+    address: 'Gate No. 6, Malwani, Malad West',
+    area: 'Malwani',
+    phone: '+91 98204 55678',
+    whatsapp: '919820455678',
+    timing: '11:00 AM - 11:00 PM',
+    rating: 4.6,
+    priceRange: '₹₹',
+    featured: true,
+    menuHighlights: [
+      'Malwani Chicken - ₹320',
+      'Surmai Fry - ₹280',
+      'Bombil Fry - ₹220',
+      'Sol Kadhi - ₹60',
+      'Prawn Masala - ₹350',
+    ],
+    tags: ['Malwani', 'Seafood', 'Non-Veg', 'Authentic', 'Coastal'],
+  },
+  {
+    id: 'shivsagar',
+    name: 'Shivsagar Restaurant',
+    tagline: 'Pure veg South Indian & Punjabi',
+    category: 'food',
+    description:
+      'A household name in Malad for decades. Known for their crispy dosas, fluffy idlis, and rich Punjabi curries. The perfect family restaurant for any occasion.',
+    address: 'S.V. Road, Malad West',
+    area: 'Malad West',
+    phone: '+91 22 2881 1234',
+    timing: '8:00 AM - 11:30 PM',
+    rating: 4.3,
+    priceRange: '₹₹',
+    featured: false,
+    menuHighlights: [
+      'Masala Dosa - ₹160',
+      'Paneer Butter Masala - ₹260',
+      'Filter Coffee - ₹70',
+      'Pav Bhaji - ₹180',
+    ],
+    tags: ['South Indian', 'Punjabi', 'Veg', 'Family', 'Dosa'],
+  },
+  {
+    id: 'biryani-blues',
+    name: 'Biryani Blues by Saffron',
+    tagline: 'Dum biryani that melts in your mouth',
+    category: 'food',
+    description:
+      'Home-style dum biryani made with premium basmati rice and slow-cooked meats. Their Hyderabadi-style chicken biryani and mutton biryani are legendary in the Malad area.',
+    address: 'Shop 12, Evershine Nagar, Malad West',
+    area: 'Malad West',
+    phone: '+91 93243 87654',
+    whatsapp: '919324387654',
+    instagram: '@biryaniblues.malad',
+    timing: '11:30 AM - 11:00 PM',
+    rating: 4.4,
+    priceRange: '₹₹',
+    featured: false,
+    menuHighlights: [
+      'Chicken Dum Biryani - ₹280',
+      'Mutton Biryani - ₹350',
+      'Veg Biryani - ₹200',
+      'Phirni - ₹100',
+    ],
+    tags: ['Biryani', 'Non-Veg', 'Mughlai', 'Delivery'],
+  },
+  {
+    id: 'hotel-janata',
+    name: 'Hotel Janata Lunch Home',
+    tagline: 'The taste of old Malad',
+    category: 'food',
+    description:
+      'A beloved local institution serving affordable thalis and Maharashtrian comfort food. Known for their unlimited veg and non-veg thalis that keep regulars coming back for decades.',
+    address: 'Near Malad Station, S.V. Road, Malad West',
+    area: 'Malad West',
+    phone: '+91 22 2881 5566',
+    timing: '10:30 AM - 10:30 PM',
+    rating: 4.1,
+    priceRange: '₹',
+    featured: false,
+    tags: ['Thali', 'Maharashtrian', 'Budget', 'Lunch'],
+  },
+  {
+    id: 'szechuan-dragon',
+    name: 'Szechuan Dragon',
+    tagline: 'Fiery Indo-Chinese favorites',
+    category: 'food',
+    description:
+      'The go-to spot for spicy Indo-Chinese in Malad. Their Szechuan noodles, dragon chicken, and sizzlers have a cult following among locals who love it hot.',
+    address: 'Chincholi Bunder Road, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 11223',
+    whatsapp: '919876511223',
+    timing: '12:00 PM - 11:30 PM',
+    rating: 4.2,
+    priceRange: '₹₹',
+    featured: false,
+    menuHighlights: [
+      'Dragon Chicken - ₹280',
+      'Szechuan Noodles - ₹220',
+      'Sizzler Combo - ₹380',
+      'Manchurian Gravy - ₹200',
+    ],
+    tags: ['Chinese', 'Indo-Chinese', 'Spicy', 'Sizzlers', 'Noodles'],
+  },
+
+  // === CAFES & BAKERIES ===
+  {
+    id: 'cafe-jeeva',
+    name: 'Cafe Jeeva',
+    tagline: 'Where Malad hangs out',
+    category: 'cafe',
+    description:
+      'A trendy cafe popular among Malad youth. Great ambiance, strong coffee, and an extensive menu of sandwiches, pastas, and shakes. Perfect for work-from-cafe sessions and casual hangouts.',
+    address: 'Orchard Avenue, Evershine Nagar, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 99887',
+    whatsapp: '919876599887',
+    instagram: '@cafejeeva',
+    timing: '10:00 AM - 12:00 AM',
+    rating: 4.3,
+    priceRange: '₹₹',
+    featured: true,
+    menuHighlights: [
+      'Cold Brew Coffee - ₹180',
+      'Club Sandwich - ₹220',
+      'Pasta Alfredo - ₹260',
+      'Nutella Shake - ₹200',
+    ],
+    tags: ['Cafe', 'Coffee', 'Hangout', 'Wi-Fi', 'Late Night'],
+  },
+  {
+    id: 'bombay-bakes',
+    name: 'Bombay Bakes',
+    tagline: 'Freshly baked happiness daily',
+    category: 'cafe',
+    description:
+      'A beloved neighbourhood bakery known for their fresh bread, cakes, and pastries. Their chicken puffs and mawa cakes are Malad favourites that sell out by evening.',
+    address: 'Near Malad Station West, S.V. Road',
+    area: 'Malad West',
+    phone: '+91 22 2882 3344',
+    timing: '7:00 AM - 10:00 PM',
+    rating: 4.2,
+    priceRange: '₹',
+    featured: false,
+    tags: ['Bakery', 'Cakes', 'Puffs', 'Budget', 'Morning'],
+  },
+  {
+    id: 'chai-thela',
+    name: 'Chai Thela',
+    tagline: 'Cutting chai, cutting-edge vibes',
+    category: 'cafe',
+    description:
+      'Malad\'s hippest chai spot. Serving over 20 varieties of chai from classic cutting to exotic rose chai, plus maggi and bun maska. The late-night chai culture hub of Malad.',
+    address: 'Evershine Nagar, Malad West',
+    area: 'Malad West',
+    whatsapp: '919876544332',
+    instagram: '@chaithela.malad',
+    timing: '6:00 AM - 1:00 AM',
+    rating: 4.4,
+    priceRange: '₹',
+    featured: false,
+    menuHighlights: [
+      'Cutting Chai - ₹15',
+      'Kulhad Chai - ₹40',
+      'Rose Chai - ₹50',
+      'Maggi - ₹60',
+      'Bun Maska - ₹40',
+    ],
+    tags: ['Chai', 'Tea', 'Late Night', 'Budget', 'Street Food'],
+  },
+
+  // === SALONS & SPAS ===
+  {
+    id: 'glamour-studio',
+    name: 'Glamour Studio by Rekha',
+    tagline: 'Your beauty, our passion',
+    category: 'salon',
+    description:
+      'A premium unisex salon offering a full range of beauty services. Known for bridal makeup, hair colour, and skincare treatments. Trusted by Malad families for over 15 years.',
+    address: 'Pushpa Park, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 22334',
+    whatsapp: '919876522334',
+    instagram: '@glamourstudio.malad',
+    timing: '10:00 AM - 9:00 PM',
+    rating: 4.5,
+    priceRange: '₹₹₹',
+    featured: true,
+    tags: ['Salon', 'Bridal Makeup', 'Hair', 'Skincare', 'Unisex'],
+  },
+  {
+    id: 'urban-cuts',
+    name: 'Urban Cuts Barbershop',
+    tagline: 'Sharp cuts, sharper style',
+    category: 'salon',
+    description:
+      'Modern men\'s barbershop with skilled barbers trained in latest hairstyling trends. Walk-ins welcome. Clean, hygienic, and affordable.',
+    address: 'Mamta Nagar, Malad West',
+    area: 'Malad West',
+    phone: '+91 93456 78900',
+    timing: '9:00 AM - 10:00 PM',
+    rating: 4.3,
+    priceRange: '₹',
+    featured: false,
+    tags: ['Barber', 'Men', 'Haircut', 'Beard', 'Affordable'],
+  },
+
+  // === GYMS & FITNESS ===
+  {
+    id: 'iron-paradise',
+    name: 'Iron Paradise Gym',
+    tagline: 'Train hard or go home',
+    category: 'gym',
+    description:
+      'A well-equipped gym with modern machines, free weights area, and certified personal trainers. Offers group classes including Zumba, CrossFit, and yoga. Open from early morning to late night.',
+    address: 'Chincholi Bunder, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 55667',
+    whatsapp: '919876555667',
+    instagram: '@ironparadise.malad',
+    timing: '5:00 AM - 11:00 PM',
+    rating: 4.4,
+    priceRange: '₹₹',
+    featured: true,
+    menuHighlights: [
+      'Monthly Membership - ₹1,500',
+      'Quarterly Plan - ₹4,000',
+      'Annual Plan - ₹12,000',
+      'Personal Training - ₹5,000/month',
+    ],
+    tags: ['Gym', 'Fitness', 'CrossFit', 'Zumba', 'Weights'],
+  },
+  {
+    id: 'yogshala-malad',
+    name: 'Yogshala Malad',
+    tagline: 'Balance your body and mind',
+    category: 'gym',
+    description:
+      'A serene yoga studio offering morning and evening batches for all levels. Specializes in Hatha Yoga, Pranayama, and meditation. Run by a certified yoga instructor with 20+ years of experience.',
+    address: 'Evershine Nagar, Near Garden, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 88990',
+    whatsapp: '919876588990',
+    timing: '6:00 AM - 8:00 PM',
+    rating: 4.6,
+    priceRange: '₹',
+    featured: false,
+    tags: ['Yoga', 'Meditation', 'Pranayama', 'Morning Batch', 'Wellness'],
+  },
+
+  // === SHOPPING ===
+  {
+    id: 'fashion-hub',
+    name: 'Fashion Hub',
+    tagline: 'Trendy ethnic & western wear',
+    category: 'shop',
+    description:
+      'A popular clothing store offering the latest in ethnic and western fashion for men, women, and kids. Known for their festive collections, especially during Eid and Diwali seasons.',
+    address: 'Kurar Village Road, Malad East',
+    area: 'Malad East',
+    phone: '+91 98765 33221',
+    whatsapp: '919876533221',
+    timing: '10:30 AM - 10:00 PM',
+    rating: 4.1,
+    priceRange: '₹₹',
+    featured: false,
+    tags: ['Clothing', 'Ethnic', 'Western', 'Festive', 'Family'],
+  },
+  {
+    id: 'mobile-world',
+    name: 'Mobile World Malad',
+    tagline: 'Best deals on smartphones & accessories',
+    category: 'shop',
+    description:
+      'Malad\'s trusted mobile phone shop for new phones, accessories, screen repairs, and second-hand devices. Authorized dealer for Samsung and Xiaomi with genuine warranty service.',
+    address: 'Near Malad Station West, S.V. Road',
+    area: 'Malad West',
+    phone: '+91 98765 44556',
+    whatsapp: '919876544556',
+    timing: '10:00 AM - 9:30 PM',
+    rating: 4.0,
+    priceRange: '₹₹',
+    featured: false,
+    tags: ['Mobile', 'Phones', 'Accessories', 'Repair', 'Samsung'],
+  },
+
+  // === SERVICES ===
+  {
+    id: 'dr-patil-clinic',
+    name: "Dr. Patil's Family Clinic",
+    tagline: 'Caring for Malad families since 1998',
+    category: 'service',
+    description:
+      'A trusted family physician serving the Malad community for over 25 years. General medicine, minor procedures, health checkups, and preventive care. Affordable consultation fees.',
+    address: 'Pushpa Park, Malad West',
+    area: 'Malad West',
+    phone: '+91 22 2882 7788',
+    timing: '9:00 AM - 1:00 PM, 5:00 PM - 9:00 PM',
+    rating: 4.7,
+    priceRange: '₹',
+    featured: false,
+    tags: ['Doctor', 'Clinic', 'Family', 'Health', 'Checkup'],
+  },
+  {
+    id: 'fast-fix-electronics',
+    name: 'Fast Fix Electronics',
+    tagline: "We fix what others can't",
+    category: 'service',
+    description:
+      'Expert repair service for laptops, TVs, ACs, and home appliances. Quick turnaround, genuine spare parts, and warranty on all repairs. Doorstep service available across Malad.',
+    address: 'Chincholi Bunder Road, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 66778',
+    whatsapp: '919876566778',
+    timing: '10:00 AM - 8:00 PM',
+    rating: 4.2,
+    priceRange: '₹₹',
+    featured: false,
+    tags: ['Repair', 'Electronics', 'AC Service', 'Laptop', 'Home Service'],
+  },
+
+  // === ENTERTAINMENT ===
+  {
+    id: 'gamezone-malad',
+    name: 'GameZone Malad',
+    tagline: 'Level up your fun!',
+    category: 'entertainment',
+    description:
+      'An indoor gaming arcade and VR experience center. Featuring PS5 gaming stations, VR headsets, air hockey, and a mini bowling alley. Perfect for birthday parties and weekend fun.',
+    address: 'Evershine Mall, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 77889',
+    whatsapp: '919876577889',
+    instagram: '@gamezone.malad',
+    timing: '11:00 AM - 10:00 PM',
+    rating: 4.3,
+    priceRange: '₹₹',
+    featured: false,
+    menuHighlights: [
+      'PS5 Gaming (1hr) - ₹200',
+      'VR Experience (30min) - ₹300',
+      'Birthday Package - ₹5,000',
+      'Combo Pass - ₹500',
+    ],
+    tags: ['Gaming', 'VR', 'PS5', 'Birthday', 'Family Fun'],
+  },
+  {
+    id: 'inox-malad',
+    name: 'INOX Malad',
+    tagline: 'Movies in luxury',
+    category: 'entertainment',
+    description:
+      'Premium multiplex cinema with 4 screens, Dolby Atmos sound, and recliner seats. Catch the latest Bollywood, Hollywood, and regional films in comfort.',
+    address: 'Infinity Mall, Malad West',
+    area: 'Malad West',
+    phone: '+91 22 6245 5555',
+    website: 'https://www.inoxmovies.com',
+    timing: '9:00 AM - 12:00 AM',
+    rating: 4.1,
+    priceRange: '₹₹₹',
+    featured: false,
+    tags: ['Movies', 'Cinema', 'Multiplex', 'Dolby', 'Entertainment'],
+  },
+
+  // === OTHER ===
+  {
+    id: 'malad-sports-club',
+    name: 'Malad Sports Club',
+    tagline: 'Play together, grow together',
+    category: 'other',
+    description:
+      'A community sports club with cricket nets, football ground, badminton courts, and a swimming pool. Hosts local tournaments and coaching camps for kids throughout the year.',
+    address: 'Orlem, Malad West',
+    area: 'Malad West',
+    phone: '+91 22 2882 9900',
+    timing: '6:00 AM - 9:00 PM',
+    rating: 4.4,
+    priceRange: '₹₹',
+    featured: false,
+    tags: ['Sports', 'Cricket', 'Football', 'Swimming', 'Kids'],
+  },
+  {
+    id: 'green-pet-clinic',
+    name: 'Green Pet Clinic & Grooming',
+    tagline: 'Because your furry friends deserve the best',
+    category: 'other',
+    description:
+      'Full-service veterinary clinic and pet grooming center. Vaccinations, surgeries, dental care, and grooming for dogs and cats. Emergency services available.',
+    address: 'Pushpa Park Road, Malad West',
+    area: 'Malad West',
+    phone: '+91 98765 00112',
+    whatsapp: '919876500112',
+    timing: '10:00 AM - 8:00 PM',
+    rating: 4.5,
+    priceRange: '₹₹',
+    featured: false,
+    tags: ['Vet', 'Pet Care', 'Dog Grooming', 'Veterinary', 'Animals'],
+  },
+];
+
+export const businessCategories = [
+  { id: 'food', label: 'Food & Restaurants', icon: '🍔' },
+  { id: 'cafe', label: 'Cafes & Bakeries', icon: '☕' },
+  { id: 'salon', label: 'Salons & Spas', icon: '💇' },
+  { id: 'gym', label: 'Gyms & Fitness', icon: '💪' },
+  { id: 'shop', label: 'Shopping', icon: '🛍️' },
+  { id: 'service', label: 'Services', icon: '🔧' },
+  { id: 'entertainment', label: 'Entertainment', icon: '🎮' },
+  { id: 'other', label: 'Other', icon: '📌' },
+];

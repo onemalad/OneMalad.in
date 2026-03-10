@@ -14,7 +14,9 @@ const heroRotatingTexts = [
   'Running blood donation drives',
 ];
 import { wardsData, corporatorsData } from '@/data/wards';
+import { businesses } from '@/data/businesses';
 import { useStore } from '@/hooks/useStore';
+import BusinessCard from '@/components/ui/BusinessCard';
 
 // Daily motivational quotes about community and civic engagement
 const dailyQuotes = [
@@ -162,34 +164,38 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — Floating Stat Cards */}
-            <div className="hidden lg:block relative h-[420px]">
-              {/* Decorative ring */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-80 h-80 rounded-full border-2 border-dashed border-emerald-100 animate-[spin_30s_linear_infinite]" />
+            {/* Right — Famous Local Businesses Banner */}
+            <div className="hidden lg:block relative">
+              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 p-5 text-white relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
+                  <div className="relative">
+                    <p className="text-xs font-bold uppercase tracking-widest opacity-90 mb-1">🔥 Famous in Malad</p>
+                    <h2 className="text-xl font-extrabold">Local Business Directory</h2>
+                    <p className="text-xs opacity-80 mt-1">Discover the best spots in your neighbourhood</p>
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  {businesses.filter(b => b.featured).map((biz) => (
+                    <BusinessCard key={biz.id} business={biz} variant="hero" />
+                  ))}
+
+                  <Link
+                    href="/directory"
+                    className="mt-4 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  >
+                    Explore All {businesses.length} Businesses →
+                  </Link>
+                  <p className="text-[10px] text-gray-400 text-center mt-2">
+                    Free directory for Malad locals
+                  </p>
+                </div>
               </div>
 
-              {/* Stat cards floating at different positions */}
-              {impactStats.slice(0, 4).map((stat, i) => {
-                const positions = [
-                  'top-0 left-4',
-                  'top-2 right-0',
-                  'bottom-8 left-0',
-                  'bottom-4 right-6',
-                ];
-                const delays = ['0s', '0.5s', '1s', '1.5s'];
-                return (
-                  <div
-                    key={stat.id}
-                    className={`absolute ${positions[i]} animate-float bg-white rounded-2xl p-5 shadow-xl shadow-gray-200/50 border border-gray-100 w-[180px] hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-default`}
-                    style={{ animationDelay: delays[i] }}
-                  >
-                    <span className="text-2xl block mb-2">{stat.emoji}</span>
-                    <div className="text-2xl font-extrabold text-gray-800">{stat.value.toLocaleString()}{stat.suffix}</div>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">{stat.label}</p>
-                  </div>
-                );
-              })}
+              <div className="absolute -top-3 -right-3 bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-xs font-extrabold shadow-lg rotate-6">
+                NEW ✨
+              </div>
             </div>
           </div>
 
