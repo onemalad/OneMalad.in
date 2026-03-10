@@ -204,7 +204,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — Famous Local Businesses Banner */}
+            {/* Right — Famous Local Businesses Banner (desktop) */}
             <div className="hidden lg:block relative">
               <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 p-5 text-white relative overflow-hidden">
@@ -239,8 +239,42 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Mobile — Business Directory Banner */}
+          <div className="lg:hidden mt-8 relative">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 p-4 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
+                <div className="relative">
+                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-90 mb-0.5">🔥 Famous in Malad</p>
+                  <h2 className="text-lg font-extrabold">Local Business Directory</h2>
+                  <p className="text-[11px] opacity-80 mt-0.5">Discover the best spots in your neighbourhood</p>
+                </div>
+              </div>
+
+              <div className="p-4 space-y-3">
+                {businesses.filter(b => b.featured).slice(0, 2).map((biz) => (
+                  <BusinessCard key={biz.id} business={biz} variant="hero" />
+                ))}
+
+                <Link
+                  href="/directory/signup"
+                  className="mt-2 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all"
+                >
+                  Sign Up to Explore All {businesses.length} Businesses →
+                </Link>
+                <p className="text-[10px] text-gray-400 text-center">
+                  Free signup · No spam · Instant access
+                </p>
+              </div>
+            </div>
+
+            <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow-lg rotate-6">
+              NEW ✨
+            </div>
+          </div>
+
           {/* Mobile Stats — Horizontal scroll */}
-          <div className="flex gap-3 mt-8 pb-2 overflow-x-auto lg:hidden scrollbar-hide">
+          <div className="flex gap-3 mt-6 pb-2 overflow-x-auto lg:hidden scrollbar-hide">
             {impactStats.slice(0, 4).map((stat) => (
               <div key={stat.id} className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-md shadow-gray-100 border border-gray-100 min-w-[140px] text-center">
                 <span className="text-xl block mb-1">{stat.emoji}</span>
