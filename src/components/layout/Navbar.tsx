@@ -15,6 +15,8 @@ export default function Navbar() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
+  if (pathname === '/directory') return null;
+
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/our-work', label: 'Our Work' },

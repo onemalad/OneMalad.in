@@ -5,7 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import FirestoreSync from '@/components/FirestoreSync';
 import NavigationProgress from '@/components/ui/NavigationProgress';
 import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import ConditionalFooter from '@/components/layout/ConditionalFooter';
 import JsonLd from '@/components/seo/JsonLd';
 import './globals.css';
 
@@ -96,7 +96,7 @@ export default function RootLayout({
           />
           <Navbar />
           <main className="min-h-screen">{children}</main>
-          <Footer />
+          <ConditionalFooter />
         </AuthProvider>
       </body>
     </html>

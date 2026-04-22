@@ -1,161 +1,85 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { businesses, businessCategories } from '@/data/businesses';
-import BusinessCard from '@/components/ui/BusinessCard';
+import { FiLock, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '@/context/AuthContext';
-import { FiSearch, FiLock, FiArrowRight } from 'react-icons/fi';
+import { businesses } from '@/data/businesses';
+import ReelsFeed from '@/components/directory/ReelsFeed';
 
 export default function DirectoryPage() {
-  const { user, loading, logout } = useAuth();
-  const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  const { user, loading } = useAuth();
 
-  // Show loading state
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
+      <div className="h-[100dvh] flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+        <div className="w-10 h-10 rounded-full border-2 border-white/10 border-t-orange-400 animate-spin" />
       </div>
     );
   }
 
-  // Auth gate — redirect to signup if not logged in
-  if (!user) {
-    return (
-      <>
-        <section className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white py-14">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Malad Local</p>
-            <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Famous Local Businesses</h1>
-            <p className="text-sm opacity-90 max-w-lg mx-auto">
-              Your go-to directory for the best food stalls, cafes, salons, gyms, and hidden gems across Malad
-            </p>
-          </div>
-        </section>
+  if (!user) return <AuthGate />;
 
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-md mx-auto px-4 text-center">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <FiLock className="text-orange-500 text-2xl" />
-            </div>
-            <h2 className="text-2xl font-extrabold text-gray-800 mb-3">Sign Up to Explore</h2>
-            <p className="text-gray-500 text-sm mb-8">
-              Create a free account to access all {businesses.length} local businesses in Malad — food, cafes, salons, gyms & more.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/directory/signup"
-                className="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl inline-flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
-              >
-                Create Free Account <FiArrowRight />
-              </Link>
-              <Link
-                href="/directory/login"
-                className="px-8 py-3.5 bg-white text-gray-700 font-bold rounded-xl border-2 border-gray-200 inline-flex items-center justify-center gap-2 text-sm hover:border-orange-300 hover:shadow-lg transition-all hover:-translate-y-0.5"
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </section>
-      </>
-    );
-  }
+  return <ReelsFeed />;
+}
 
-  const filteredBusinesses = businesses.filter((biz) => {
-    const matchesSearch =
-      biz.name.toLowerCase().includes(search.toLowerCase()) ||
-      biz.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-    const matchesCategory = activeCategory === 'all' || biz.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    return b.rating - a.rating;
-  });
-
+function AuthGate() {
   return (
-    <>
-      <section className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 text-white py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Malad Local</p>
-          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">Famous Local Businesses</h1>
-          <p className="text-sm opacity-90 max-w-lg mx-auto">
-            Your go-to directory for the best food stalls, cafes, salons, gyms, and hidden gems across Malad
+    <div
+      className="relative min-h-[100dvh] overflow-hidden flex flex-col"
+      style={{ background: 'var(--bg-primary)' }}
+    >
+      {/* Ambient gradient glow */}
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #ff6b35 0%, transparent 70%)' }} />
+      <div className="absolute bottom-[-15%] right-[-10%] w-[70%] h-[70%] rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, #b06ab3 0%, transparent 70%)' }} />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <Link href="/" className="mb-10 flex items-center gap-2.5 active:scale-95 transition-transform">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-emerald-500/30">
+            1
+          </div>
+          <div className="leading-tight text-left">
+            <div className="text-white font-black text-base tracking-tight">
+              malad<span className="text-orange-400">.in</span>
+            </div>
+            <div className="text-[9px] font-semibold tracking-[0.2em] uppercase text-white/50">
+              Local Directory
+            </div>
+          </div>
+        </Link>
+
+        <div className="max-w-sm">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-6 glass-surface text-orange-400">
+            <FiLock className="text-2xl" />
+          </div>
+
+          <h1 className="text-white font-extrabold text-[28px] leading-tight tracking-tight mb-3">
+            Malad, on loop.
+          </h1>
+          <p className="text-white/70 text-[14.5px] leading-relaxed mb-8">
+            Scroll through {businesses.length}+ hand-picked local businesses — food, cafes, salons, gyms, and more. Save your favourites. Message them on WhatsApp in one tap.
           </p>
-          <div className="max-w-md mx-auto mt-8 relative">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search businesses, food, places..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-xl bg-white text-gray-800 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
-            />
-          </div>
-          <div className="flex items-center justify-center gap-4 mt-4">
-            <p className="text-xs opacity-70">{businesses.length} businesses listed</p>
-            <span className="text-xs opacity-50">·</span>
-            <button onClick={() => { logout(); router.push('/directory/login'); }} className="text-xs opacity-70 hover:opacity-100 underline">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </section>
 
-      <section className="bg-white border-b border-gray-100 sticky top-[70px] z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex gap-2 overflow-x-auto py-4 scrollbar-hide">
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                activeCategory === 'all'
-                  ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+          <div className="flex flex-col gap-2.5">
+            <Link
+              href="/directory/signup"
+              className="btn-cta h-12 rounded-2xl inline-flex items-center justify-center gap-2 text-white font-bold text-[15px]"
             >
-              All
-            </button>
-            {businessCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeCategory === cat.id
-                    ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {cat.icon} {cat.label}
-              </button>
-            ))}
+              Create Free Account
+              <FiArrowRight />
+            </Link>
+            <Link
+              href="/directory/login"
+              className="h-12 rounded-2xl glass-surface inline-flex items-center justify-center text-white font-semibold text-[15px] active:scale-[0.98] transition-transform"
+            >
+              Sign In
+            </Link>
           </div>
-        </div>
-      </section>
 
-      <section className="py-16 sm:py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {sortedBusinesses.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-4xl mb-4">🔍</p>
-              <h3 className="text-lg font-bold text-gray-700 mb-2">No businesses found</h3>
-              <p className="text-sm text-gray-400">Try a different search or category</p>
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {sortedBusinesses.map((biz) => (
-                <BusinessCard key={biz.id} business={biz} />
-              ))}
-            </div>
-          )}
+          <p className="mt-8 text-white/40 text-[11px] uppercase tracking-widest font-semibold">
+            Free · No spam · 30-second signup
+          </p>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
