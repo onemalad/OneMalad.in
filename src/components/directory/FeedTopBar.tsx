@@ -6,12 +6,13 @@ import { FiSearch, FiX } from 'react-icons/fi';
 interface Props {
   search: string;
   onSearchChange: (v: string) => void;
-  onSignOut: () => void;
+  authLabel: string;
+  onAuthAction: () => void;
   showSearch: boolean;
   onToggleSearch: () => void;
 }
 
-export default function FeedTopBar({ search, onSearchChange, onSignOut, showSearch, onToggleSearch }: Props) {
+export default function FeedTopBar({ search, onSearchChange, authLabel, onAuthAction, showSearch, onToggleSearch }: Props) {
   return (
     <div className="absolute top-0 left-0 right-0 z-30 pt-safe">
       <div className="flex items-center justify-between gap-2 px-4 pt-3 pb-2">
@@ -38,10 +39,10 @@ export default function FeedTopBar({ search, onSearchChange, onSignOut, showSear
             {showSearch ? <FiX className="text-lg" /> : <FiSearch className="text-lg" />}
           </button>
           <button
-            onClick={onSignOut}
+            onClick={onAuthAction}
             className="text-[11px] font-semibold text-white/70 hover:text-white uppercase tracking-wider px-2"
           >
-            Sign Out
+            {authLabel}
           </button>
         </div>
       </div>

@@ -12,7 +12,7 @@ import BusinessDetailSheet from './BusinessDetailSheet';
 const SAVED_KEY = 'malad_saved_businesses';
 
 export default function ReelsFeed() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
@@ -55,9 +55,13 @@ export default function ReelsFeed() {
     });
   }, [activeCategory, search]);
 
-  const handleSignOut = async () => {
-    await logout();
-    router.push('/directory/login');
+  const handleAuthAction = async () => {
+    if (user) {
+      await logout();
+      router.push('/');
+    } else {
+      router.push('/directory/login');
+    }
   };
 
   return (
@@ -65,7 +69,8 @@ export default function ReelsFeed() {
       <FeedTopBar
         search={search}
         onSearchChange={setSearch}
-        onSignOut={handleSignOut}
+        authLabel={user ? 'Sign Out' : 'Sign In'}
+        onAuthAction={handleAuthAction}
         showSearch={showSearch}
         onToggleSearch={() => setShowSearch((v) => !v)}
       />

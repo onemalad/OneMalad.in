@@ -6,48 +6,123 @@
 
 @layer base {
   body {
-    @apply font-sans text-gray-800 bg-gray-50 antialiased;
+    @apply font-sans antialiased;
     scroll-behavior: smooth;
+    background: #0a0a0b;
+    color: #ffffff;
   }
 
   ::selection {
-    @apply bg-emerald-600/20 text-emerald-900;
+    @apply bg-orange-500/20 text-orange-100;
   }
 }
 
 @layer components {
+  /* Card — dark glass surface used by civic pages */
   .card {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-sm;
+    background: rgba(20, 20, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    @apply rounded-2xl text-white;
   }
 
   .card-hover {
-    @apply hover:shadow-lg hover:shadow-gray-200/50 hover:border-gray-200 hover:-translate-y-0.5 transition-all duration-300;
+    @apply hover:border-white/15 hover:-translate-y-0.5 transition-all duration-300;
   }
 
+  /* Primary button — orange gradient matching directory theme */
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+    box-shadow: 0 10px 30px -10px rgba(255, 107, 53, 0.5);
+    @apply px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98];
   }
 
+  /* Secondary button — glass dark */
   .btn-secondary {
-    @apply px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-300;
+    background: rgba(20, 20, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    @apply px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-white/5;
   }
 
+  /* Page header gradient — premium dark hero */
   .page-header-gradient {
-    @apply bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-700 text-white py-12 sm:py-16;
+    background: radial-gradient(ellipse at 20% 10%, rgba(255, 107, 53, 0.35) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, rgba(176, 106, 179, 0.3) 0%, transparent 55%),
+                #0a0a0b;
+    @apply text-white py-16 sm:py-20 relative overflow-hidden;
+  }
+  .page-header-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(245, 196, 81, 0.1) 0%, transparent 60%);
+    pointer-events: none;
   }
 
   .stat-card {
     @apply card p-6 text-center;
   }
 
+  /* Gradient text — orange/gold */
   .gradient-text {
-    @apply bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent;
+    background: linear-gradient(135deg, #ff6b35 0%, #f5c451 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
+    background: rgba(20, 20, 22, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
+
+/* --- Dark-theme overrides for existing Tailwind utility classes on civic pages ---
+   These keep the civic page source files intact but flip their colours. */
+
+/* White cards / surfaces become dark glass */
+.bg-white {
+  background-color: rgba(20, 20, 22, 0.6) !important;
+  color: #ffffff;
+}
+.bg-gray-50 { background-color: transparent !important; }
+.bg-gray-100 { background-color: rgba(255, 255, 255, 0.05) !important; }
+
+/* Default dark-page text colour swap */
+body .text-gray-800 { color: rgba(255, 255, 255, 0.95) !important; }
+body .text-gray-700 { color: rgba(255, 255, 255, 0.88) !important; }
+body .text-gray-600 { color: rgba(255, 255, 255, 0.78) !important; }
+body .text-gray-500 { color: rgba(255, 255, 255, 0.62) !important; }
+body .text-gray-400 { color: rgba(255, 255, 255, 0.48) !important; }
+body .text-gray-300 { color: rgba(255, 255, 255, 0.3) !important; }
+
+/* Borders */
+body .border-gray-100 { border-color: rgba(255, 255, 255, 0.06) !important; }
+body .border-gray-200 { border-color: rgba(255, 255, 255, 0.1) !important; }
+body .border-gray-300 { border-color: rgba(255, 255, 255, 0.14) !important; }
+
+/* Emerald -> keep but brighten for dark */
+body .text-emerald-700 { color: #34d399 !important; }
+body .text-emerald-600 { color: #34d399 !important; }
+body .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.12) !important; }
+body .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.18) !important; }
+
+/* But skip overrides inside the directory feed and dark-intentional roots */
+.directory-root .bg-white,
+.directory-root .bg-gray-50,
+.directory-root .bg-gray-100,
+.directory-root .text-gray-800,
+.directory-root .text-gray-700,
+.directory-root .text-gray-600,
+.directory-root .text-gray-500,
+.directory-root .text-gray-400,
+.directory-root .text-gray-300 { all: revert; }
 
 /* Smooth fade-in animation for sections */
 @keyframes fadeInUp {
@@ -96,7 +171,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1.5px;
-  background: linear-gradient(135deg, #059669, #14b8a6);
+  background: linear-gradient(135deg, #ff6b35, #f5c451);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -110,7 +185,7 @@
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -130,7 +205,7 @@
   animation: pulseRing 1.5s ease-out infinite;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — dark */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -138,11 +213,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Modal animation */

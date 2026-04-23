@@ -6,66 +6,74 @@ import {
   FiArrowRight, FiCheck, FiMenu, FiX, FiZap, FiTrendingUp, FiStar,
   FiArrowUpRight, FiMessageCircle, FiShield, FiClock, FiHeart,
 } from 'react-icons/fi';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaGoogle } from 'react-icons/fa';
 import { businesses } from '@/data/businesses';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const WHATSAPP = '919820455678';
+const EMAIL = 'connectonemalad@gmail.com';
+// TODO: replace with the user's real Google Form URL once created
+const GOOGLE_FORM_URL = 'https://forms.gle/your-form-id-here';
 const wa = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 
 const plans = [
   {
-    id: 'basic',
-    name: 'Starter',
-    price: 299,
-    period: '/month',
-    tagline: 'Get discovered',
-    cta: 'Start with Starter',
-    msg: 'Hi, I want to subscribe to the Starter plan (₹299/mo) on OneMalad.in.',
+    id: '1mo',
+    name: '1 Month',
+    price: 300,
+    period: 'total',
+    perMonth: 300,
+    tagline: 'Try it out',
+    cta: 'Pick 1 Month',
+    msg: 'Hi, I want the 1-month plan (₹300) on OneMalad.in after my free trial week.',
     features: [
       'Listed in the OneMalad directory',
-      'Business profile with photos',
-      'WhatsApp + Call buttons',
-      'Category + tags',
-      'Menu / services section',
+      'Full business profile + photos',
+      'WhatsApp + Call + directions buttons',
+      'Category + tags + menu/services',
       'Verified tick after approval',
+      '1 week free trial first',
     ],
     featured: false,
   },
   {
-    id: 'featured',
-    name: 'Featured',
-    price: 999,
-    period: '/month',
-    tagline: 'Most popular',
-    cta: 'Go Featured',
-    msg: 'Hi, I want to subscribe to the Featured plan (₹999/mo) on OneMalad.in.',
+    id: '3mo',
+    name: '3 Months',
+    price: 800,
+    period: 'total',
+    perMonth: 267,
+    tagline: 'Most popular · Save 11%',
+    cta: 'Pick 3 Months',
+    msg: 'Hi, I want the 3-month plan (₹800) on OneMalad.in after my free trial week.',
     features: [
-      'Everything in Starter',
+      'Everything in 1 Month',
       '⭐ Featured badge on your card',
-      'Priority placement in the Reels feed',
+      'Priority in the Reels feed',
       'Appear in "Top of Malad" carousel',
-      'Up to 3 short videos on your listing',
-      'Offer banner (20% off / festive) support',
-      'Monthly performance report',
+      'Up to 5 photos + 1 short video',
+      'Offer banner (limited-time deals)',
+      'Free renewal reminder on WhatsApp',
     ],
     featured: true,
   },
   {
-    id: 'promotion',
-    name: 'Promotion',
-    price: 1999,
-    period: '/month',
-    tagline: 'Maximum reach',
-    cta: 'Promote my business',
-    msg: 'Hi, I want to subscribe to the Promotion plan (₹1999/mo) on OneMalad.in.',
+    id: '6mo',
+    name: '6 Months',
+    price: 1500,
+    period: 'total',
+    perMonth: 250,
+    tagline: 'Best value · Save 17%',
+    cta: 'Pick 6 Months',
+    msg: 'Hi, I want the 6-month plan (₹1500) on OneMalad.in after my free trial week.',
     features: [
-      'Everything in Featured',
+      'Everything in 3 Months',
       'Homepage hero placement (rotating)',
-      'WhatsApp broadcast feature (1x/month)',
-      'Unlimited videos + photo gallery',
-      'Dedicated account manager',
-      'Custom offer campaigns',
+      'Unlimited photos + 2 videos',
+      'Custom offer campaigns (2x)',
       'Instagram cross-promotion',
+      'Priority WhatsApp support',
+      'Quarterly performance report',
     ],
     featured: false,
   },
@@ -74,15 +82,23 @@ const plans = [
 const faqs = [
   {
     q: 'How do I list my business?',
-    a: 'Pick a plan below, hit the button — it opens a WhatsApp chat with our team. Share your business photos, menu, and details. We build the listing for you in 24 hours.',
+    a: 'Click "Start Your Free Week" below. Sign in with your Google account, then fill a short form with your business details, menu, and photos (logo, shop, menu items). Your listing goes live in 24 hours. First week is free.',
+  },
+  {
+    q: 'Is the free trial really free? Do I need a card?',
+    a: 'Yes — no card, no commitment. You list for 7 days at zero cost. On day 5-6, we WhatsApp you with the paid plan options. If you like the results, you pick 1/3/6 months. If not, your listing goes down. No charge either way.',
   },
   {
     q: 'Do you charge any commission on my orders?',
-    a: 'No. We don\'t take a cut of your sales. You pay the monthly subscription, and 100% of what you earn is yours. Customers WhatsApp or call you directly.',
+    a: 'No. We don\'t take a cut. You pay the flat subscription once (1, 3 or 6 months) and 100% of what you earn is yours. Customers WhatsApp or call you directly.',
   },
   {
-    q: 'Can I upgrade or cancel later?',
-    a: 'Yes — cancel anytime, no lock-in. Upgrades are pro-rated. Downgrades kick in at the next billing cycle.',
+    q: 'How do I pay after the trial?',
+    a: 'UPI, net banking, or card. We send you a WhatsApp link for payment. One-time payment for the plan you choose — no monthly auto-debit, no surprises.',
+  },
+  {
+    q: 'Can I renew or upgrade later?',
+    a: 'Yes — we send a WhatsApp reminder 3 days before your listing expires. You can renew the same plan, upgrade to a longer one, or let it lapse. Zero lock-in.',
   },
   {
     q: 'Who sees my listing?',
@@ -90,11 +106,11 @@ const faqs = [
   },
   {
     q: 'What if my category isn\'t listed?',
-    a: 'We cover Food, Cafes, Salons, Gyms, Shops, Services, Entertainment, and more. If you run something unique, WhatsApp us — we\'ll categorize you correctly.',
+    a: 'We cover Food, Cafes, Salons, Gyms, Shops, Services, Entertainment, and more. If you run something unique, WhatsApp us first — we\'ll categorise you correctly.',
   },
   {
-    q: 'How do I pay?',
-    a: 'UPI, net banking, or card — all through our payment partner. We send you a WhatsApp invoice at the start of each cycle.',
+    q: 'I just want to ask questions first, not commit.',
+    a: 'Totally fine — hit "Talk to us" above and WhatsApp us directly. We\'ll explain the plan, answer questions, and only invite you to sign up when you\'re ready.',
   },
 ];
 
@@ -194,37 +210,74 @@ function Hero() {
           For Business Owners
         </div>
         <h1 className="font-black text-[38px] sm:text-[56px] lg:text-[68px] leading-[0.98] tracking-[-0.03em] text-white">
-          Put your business<br />in front of{' '}
+          First week{' '}
           <span className="bg-clip-text text-transparent"
             style={{ backgroundImage: 'linear-gradient(135deg, #ff6b35 0%, #f5c451 100%)' }}>
-            Malad.
+            free.
           </span>
+          <br />No card, no commitment.
         </h1>
         <p className="mt-6 text-white/70 text-[16px] sm:text-[17.5px] leading-relaxed max-w-[620px] mx-auto">
-          Start at ₹299/month. Get discovered by 10,000+ Malad locals searching for where to eat, shop, and spend. One-tap WhatsApp. Zero commissions. You keep 100%.
+          Get your business in front of 10,000+ Malad locals for 7 days — at zero cost. Keep going for ₹300 a month, or walk away. We don&apos;t take a commission. You keep 100%.
         </p>
         <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a href="#plans" className="btn-cta h-[52px] px-7 rounded-full text-white font-bold text-[15px] inline-flex items-center gap-2 active:scale-[0.98]">
-            See Plans <FiArrowRight />
-          </a>
+          <StartFreeWeekCta />
           <a
-            href={wa('Hi, I want to list my business on OneMalad.in.')}
+            href={wa('Hi, I want to list my business on OneMalad.in. Can you tell me more?')}
             target="_blank"
             rel="noopener noreferrer"
             className="h-[52px] px-7 rounded-full glass-surface text-white font-semibold text-[15px] inline-flex items-center gap-2 active:scale-[0.98]"
           >
-            <FaWhatsapp className="text-emerald-400" /> Chat with us
+            <FaWhatsapp className="text-emerald-400" /> Talk to us first
           </a>
         </div>
 
         <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          <Stat k="10K+" v="Monthly locals" />
+          <Stat k="7 days" v="Free trial" />
           <Stat k={`${businesses.length}+`} v="Active listings" />
           <Stat k="0%" v="Commission" />
           <Stat k="24h" v="To go live" />
         </div>
       </div>
     </section>
+  );
+}
+
+/** Sign in with Google, then redirect to the Google Form for listing details */
+function StartFreeWeekCta({ size = 'lg' }: { size?: 'lg' | 'md' }) {
+  const { user, signInWithGoogle } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const go = async () => {
+    try {
+      if (!user) {
+        setLoading(true);
+        await signInWithGoogle();
+      }
+      if (GOOGLE_FORM_URL.includes('your-form-id-here')) {
+        toast('Listing form is being finalized — WhatsApp us and we\'ll get you listed today.', { duration: 5000 });
+        window.open(wa('Hi, I signed in to list my business on OneMalad.in. Can you help me complete the listing form?'), '_blank');
+      } else {
+        window.open(GOOGLE_FORM_URL, '_blank');
+      }
+    } catch {
+      // auth context already shows toast
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sizing = size === 'lg' ? 'h-[52px] px-7 text-[15px]' : 'h-12 px-6 text-[14px]';
+  return (
+    <button
+      onClick={go}
+      disabled={loading}
+      className={`btn-cta ${sizing} rounded-full text-white font-bold inline-flex items-center gap-2 active:scale-[0.98] disabled:opacity-60`}
+    >
+      <FaGoogle className="text-white text-sm" />
+      {user ? 'Continue to listing form' : 'Start Your Free Week'}
+      <FiArrowRight />
+    </button>
   );
 }
 
@@ -289,10 +342,10 @@ function Plans() {
         <div className="text-center mb-14">
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange-400">Pricing</span>
           <h2 className="text-white font-black text-[30px] sm:text-[44px] tracking-[-0.02em] mt-3 leading-tight">
-            Pick a plan. Go live in 24 hours.
+            After your free week.
           </h2>
           <p className="text-white/60 text-[14.5px] mt-3 max-w-xl mx-auto">
-            All plans include WhatsApp + Call buttons, dashboard access, and support. No commission, no hidden fees.
+            The first 7 days are free. After that, pick any plan below to keep your listing live. One-time payment. No auto-debit. Cancel anytime.
           </p>
         </div>
 
@@ -332,9 +385,12 @@ function PlanCard({ plan }: { plan: typeof plans[number] }) {
       <div className="mb-6">
         <div className="text-[11px] font-bold uppercase tracking-widest text-white/50">{plan.tagline}</div>
         <h3 className="text-white font-black text-[26px] tracking-tight mt-1">{plan.name}</h3>
-        <div className="mt-4 flex items-baseline gap-1">
+        <div className="mt-4 flex items-baseline gap-2">
           <span className="text-white font-black text-[42px] tracking-tight">₹{plan.price}</span>
-          <span className="text-white/50 text-[14px] font-medium">{plan.period}</span>
+          <span className="text-white/50 text-[13px] font-medium">total</span>
+        </div>
+        <div className="text-white/50 text-[12px] mt-1">
+          ≈ ₹{plan.perMonth}/month{plan.perMonth < 300 ? ' · save vs monthly' : ''}
         </div>
       </div>
 
@@ -368,9 +424,10 @@ function PlanCard({ plan }: { plan: typeof plans[number] }) {
 
 function Process() {
   const steps = [
-    { n: '01', title: 'Pick a plan', body: 'Choose Starter, Featured, or Promotion. Click the button — opens WhatsApp.' },
-    { n: '02', title: 'Share your details', body: 'Send us business photos, menu, contact, timing. Takes 5 minutes over WhatsApp.' },
-    { n: '03', title: 'Go live in 24 hours', body: 'We build your listing, verify it, and push it live. Start getting WhatsApp leads immediately.' },
+    { n: '01', title: 'Sign in with Google', body: 'One-click sign-in. No passwords, no signup form. We use your Google account only to send you a confirmation.' },
+    { n: '02', title: 'Fill the listing form', body: 'Share your business name, photos (logo, shop, menu), timing, category, and pricing. Takes 5 minutes.' },
+    { n: '03', title: 'Free for a week', body: 'We build and publish your listing within 24 hours. Get WhatsApp leads for 7 full days at zero cost.' },
+    { n: '04', title: 'Continue for ₹300/mo', body: 'On day 5–6 we WhatsApp you to pick 1/3/6 months. Pay via UPI. Or walk away, no charge.' },
   ];
   return (
     <section className="py-16 sm:py-20 relative">
@@ -378,18 +435,21 @@ function Process() {
         <div className="text-center mb-12">
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange-400">How it works</span>
           <h2 className="text-white font-black text-[28px] sm:text-[40px] tracking-[-0.02em] mt-3 leading-tight">
-            Three steps. No forms.
+            Four simple steps.
           </h2>
+          <p className="text-white/60 text-[14px] mt-3 max-w-xl mx-auto">
+            From sign-in to a live listing in 24 hours.
+          </p>
         </div>
-        <div className="grid sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
           {steps.map((s) => (
-            <div key={s.n} className="relative rounded-3xl p-7 glass-surface" style={{ background: 'rgba(20,20,22,0.6)' }}>
-              <div className="font-black text-[48px] tracking-tight"
+            <div key={s.n} className="relative rounded-3xl p-6 glass-surface" style={{ background: 'rgba(20,20,22,0.6)' }}>
+              <div className="font-black text-[42px] tracking-tight"
                 style={{ backgroundImage: 'linear-gradient(135deg, #ff6b35, #f5c451)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                 {s.n}
               </div>
-              <h3 className="text-white font-bold text-[17px] mt-2">{s.title}</h3>
-              <p className="text-white/65 text-[13.5px] leading-relaxed mt-2">{s.body}</p>
+              <h3 className="text-white font-bold text-[16px] mt-2">{s.title}</h3>
+              <p className="text-white/65 text-[13px] leading-relaxed mt-2">{s.body}</p>
             </div>
           ))}
         </div>
@@ -454,20 +514,18 @@ function FinalCTA() {
           Join 30+ Malad businesses already getting WhatsApp leads every day.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <StartFreeWeekCta />
           <a
             href={wa('Hi, I want to list my business on OneMalad.in.')}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-cta h-[52px] px-7 rounded-full text-white font-bold text-[15px] inline-flex items-center gap-2 active:scale-[0.98]"
+            className="h-[52px] px-7 rounded-full glass-surface text-white font-semibold text-[15px] inline-flex items-center gap-2 active:scale-[0.98]"
           >
-            <FaWhatsapp /> List my business on WhatsApp
+            <FaWhatsapp /> WhatsApp us
           </a>
-          <Link href="/directory" className="h-[52px] px-7 rounded-full glass-surface text-white font-semibold text-[15px] inline-flex items-center gap-2 active:scale-[0.98]">
-            See the directory <FiArrowUpRight />
-          </Link>
         </div>
         <p className="text-white/40 text-[12px] mt-6 uppercase tracking-widest font-semibold">
-          We reply within minutes · 9 AM – 9 PM
+          We reply within minutes · 9 AM – 9 PM · Or email <a href={`mailto:${EMAIL}`} className="underline hover:text-white">{EMAIL}</a>
         </p>
       </div>
     </section>
