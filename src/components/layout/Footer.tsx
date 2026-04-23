@@ -97,7 +97,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5 text-sm">
                 <FiMail className="text-base flex-shrink-0 text-orange-400" />
-                <a href="mailto:connectonemalad@gmail.com" className="hover:text-white">connectonemalad@gmail.com</a>
+                <a href="mailto:onemaladconnect@gmail.com" className="hover:text-white">onemaladconnect@gmail.com</a>
               </li>
               <li className="flex items-center gap-2.5 text-sm">
                 <FiPhone className="text-base flex-shrink-0 text-orange-400" />

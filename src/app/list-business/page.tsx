@@ -12,7 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 
 const WHATSAPP = '919820455678';
-const EMAIL = 'connectonemalad@gmail.com';
+const EMAIL = 'onemaladconnect@gmail.com';
 // TODO: replace with the user's real Google Form URL once created
 const GOOGLE_FORM_URL = 'https://forms.gle/your-form-id-here';
 const wa = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
