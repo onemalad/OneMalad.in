@@ -1,820 +1,670 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { FiArrowRight, FiMapPin, FiUsers, FiCheckCircle, FiCalendar, FiHeart, FiZap, FiPhone, FiDroplet, FiShield } from 'react-icons/fi';
-import { HiOutlineLocationMarker, HiOutlineSparkles } from 'react-icons/hi';
-
-const heroRotatingTexts = [
-  'Cleaning beaches across Malad',
-  'Distributing meals to 500+ families',
-  'Organizing free health checkups',
-  'Planting trees in every ward',
-  'Empowering youth through education',
-  'Running blood donation drives',
-];
-import { wardsData, corporatorsData } from '@/data/wards';
-import { businesses } from '@/data/businesses';
-import { useStore } from '@/hooks/useStore';
-import BusinessCard from '@/components/ui/BusinessCard';
-
-// Daily motivational quotes about community and civic engagement
-const dailyQuotes = [
-  { text: 'The strength of the community is each individual member. The strength of each member is the community.', author: 'Phil Jackson' },
-  { text: 'Alone we can do so little; together we can do so much.', author: 'Helen Keller' },
-  { text: 'Never doubt that a small group of thoughtful, committed citizens can change the world.', author: 'Margaret Mead' },
-  { text: 'The best way to find yourself is to lose yourself in the service of others.', author: 'Mahatma Gandhi' },
-  { text: 'We make a living by what we get, but we make a life by what we give.', author: 'Winston Churchill' },
-  { text: 'In every community, there is work to be done. In every nation, there are wounds to heal.', author: 'Marianne Williamson' },
-  { text: 'Coming together is a beginning, staying together is progress, and working together is success.', author: 'Henry Ford' },
-  { text: 'The greatness of a community is most accurately measured by the compassionate actions of its members.', author: 'Coretta Scott King' },
-  { text: 'It is not enough to be compassionate. You must act.', author: 'Dalai Lama' },
-  { text: 'A nation\'s greatness is measured by how it treats its weakest members.', author: 'Mahatma Gandhi' },
-  { text: 'What we have done for ourselves alone dies with us; what we have done for others remains and is immortal.', author: 'Albert Pike' },
-  { text: 'No one has ever become poor by giving.', author: 'Anne Frank' },
-  { text: 'Service to others is the rent you pay for your room here on earth.', author: 'Muhammad Ali' },
-  { text: 'Be the change you wish to see in the world.', author: 'Mahatma Gandhi' },
-  { text: 'If you want to go fast, go alone. If you want to go far, go together.', author: 'African Proverb' },
-  { text: 'The purpose of life is not to be happy. It is to be useful, to be honorable, to be compassionate.', author: 'Ralph Waldo Emerson' },
-  { text: 'We rise by lifting others.', author: 'Robert Ingersoll' },
-  { text: 'Think globally, act locally.', author: 'Patrick Geddes' },
-  { text: 'Every great dream begins with a dreamer. You have within you the strength to reach for the stars.', author: 'Harriet Tubman' },
-  { text: 'Volunteers do not necessarily have the time; they have the heart.', author: 'Elizabeth Andrew' },
-  { text: 'Unity is strength. When there is teamwork and collaboration, wonderful things can be achieved.', author: 'Mattie Stepanek' },
-  { text: 'Our lives begin to end the day we become silent about things that matter.', author: 'Martin Luther King Jr.' },
-  { text: 'You must not lose faith in humanity. Humanity is an ocean; a few drops do not make the ocean dirty.', author: 'Mahatma Gandhi' },
-  { text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs' },
-  { text: 'A community is like a ship; everyone ought to be prepared to take the helm.', author: 'Henrik Ibsen' },
-  { text: 'Small acts, when multiplied by millions of people, can transform the world.', author: 'Howard Zinn' },
-  { text: 'One person can make a difference, and everyone should try.', author: 'John F. Kennedy' },
-  { text: 'The world is changed by your example, not by your opinion.', author: 'Paulo Coelho' },
-  { text: 'Do what you can, with what you have, where you are.', author: 'Theodore Roosevelt' },
-  { text: 'Together, ordinary people can achieve extraordinary results.', author: 'Becka Schoettle' },
-  { text: 'Let us remember: One book, one pen, one child, and one teacher can change the world.', author: 'Malala Yousafzai' },
-];
-
-function getDailyQuote() {
-  const now = new Date();
-  const hours = now.getHours();
-  const dayIndex = hours < 6
-    ? new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1).getDate()
-    : now.getDate();
-  const monthSeed = now.getMonth() * 31;
-  const index = (dayIndex + monthSeed) % dailyQuotes.length;
-  return dailyQuotes[index];
-}
-
-const activityCategoryLabels: Record<string, string> = {
-  cleanliness_drive: 'Cleanliness',
-  health_camp: 'Health',
-  food_distribution: 'Food Drive',
-  education: 'Education',
-  tree_planting: 'Environment',
-  blood_donation: 'Blood Donation',
-  sports: 'Sports',
-  cultural: 'Cultural',
-  infrastructure: 'Infrastructure',
-  other: 'Other',
-};
-
-const activityCategoryColors: Record<string, string> = {
-  cleanliness_drive: 'bg-green-100 text-green-800',
-  health_camp: 'bg-red-100 text-red-800',
-  food_distribution: 'bg-amber-100 text-amber-800',
-  education: 'bg-blue-100 text-blue-800',
-  tree_planting: 'bg-emerald-100 text-emerald-800',
-  blood_donation: 'bg-rose-100 text-rose-800',
-  sports: 'bg-orange-100 text-orange-800',
-  cultural: 'bg-purple-100 text-purple-800',
-  infrastructure: 'bg-gray-100 text-gray-800',
-  other: 'bg-gray-100 text-gray-800',
-};
+import {
+  FiArrowRight, FiArrowUpRight, FiMapPin, FiStar, FiCheck, FiMenu, FiX,
+  FiChevronDown, FiHeart, FiPhone, FiUsers, FiZap, FiSearch,
+} from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+import { businesses, businessCategories, categoryIcons } from '@/data/businesses';
 
 export default function HomePage() {
-  const { activities, events, impactStats } = useStore();
-  const recentActivities = activities.slice(0, 3);
-  const upcomingEvents = events.filter((e) => e.isUpcoming).slice(0, 3);
+  return (
+    <div className="directory-root min-h-screen" style={{ background: '#0a0a0b', color: '#ffffff' }}>
+      <DarkNav />
+      <Hero />
+      <FeedPreview />
+      <CategoriesStrip />
+      <FeaturedCarousel />
+      <ForBusinessesSection />
+      <CommunityStrip />
+      <DarkFooter />
+    </div>
+  );
+}
 
-  const quote = getDailyQuote();
+/* ---------------- NAV ---------------- */
 
-  // Rotating hero text
-  const [heroTextIndex, setHeroTextIndex] = useState(0);
-  const [fadeIn, setFadeIn] = useState(true);
+function DarkNav() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFadeIn(false);
-      setTimeout(() => {
-        setHeroTextIndex((prev) => (prev + 1) % heroRotatingTexts.length);
-        setFadeIn(true);
-      }, 300);
-    }, 3000);
-    return () => clearInterval(interval);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const communityLinks = [
+    { href: '/our-work', label: 'Our Work' },
+    { href: '/wards', label: 'Wards' },
+    { href: '/events', label: 'Events' },
+    { href: '/helplines', label: 'Helplines' },
+    { href: '/blood-donors', label: 'Blood Donors' },
+    { href: '/corporators', label: 'Corporators' },
+    { href: '/gallery', label: 'Gallery' },
+    { href: '/volunteer', label: 'Volunteer' },
+  ];
+
   return (
-    <>
-      {/* 1. Hero Section — Bright & Modern */}
-      <section className="relative overflow-hidden bg-white">
-        {/* Decorative background shapes */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-gradient-to-br from-emerald-100 via-teal-50 to-transparent rounded-full opacity-70" />
-          <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-gradient-to-tr from-amber-50 via-orange-50 to-transparent rounded-full opacity-60" />
-          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-10 sm:pb-14 relative">
-          <div className="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-start">
-            {/* Left — Content */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full border border-emerald-200/60 mb-7 shadow-sm">
-                <FiZap className="text-amber-500 text-sm" />
-                <span className={`text-sm font-semibold text-emerald-700 transition-all duration-300 ${fadeIn ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>
-                  {heroRotatingTexts[heroTextIndex]}
-                </span>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'glass-surface border-b' : 'bg-transparent border-b border-transparent'
+      }`}
+      style={scrolled ? { borderColor: 'rgba(255,255,255,0.08)' } : undefined}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 active:scale-95 transition-transform">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-sm shadow-lg"
+              style={{ background: 'linear-gradient(135deg, #ff6b35, #ff8e53)', boxShadow: '0 8px 24px -8px rgba(255,107,53,0.5)' }}
+            >
+              1
+            </div>
+            <div className="leading-tight">
+              <div className="text-white font-black text-[17px] tracking-tight">
+                One<span className="text-orange-400">Malad</span>
               </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.08] mb-6 text-gray-900">
-                Building a Better{' '}
-                <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
-                  Malad,
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
-                  Together.
-                </span>
-              </h1>
-
-              <p className="text-lg text-gray-500 mb-8 leading-relaxed max-w-xl">
-                OneMalad Foundation serves through community service, health camps, cleanliness drives, food distribution, and grassroots initiatives. Join us.
-              </p>
-
-              <div className="flex flex-wrap gap-3 mb-8">
-                <Link href="/our-work" className="px-7 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-200/60 transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
-                  Explore Our Work <FiArrowRight />
-                </Link>
-                <Link href="/volunteer" className="px-7 py-3.5 bg-white text-gray-800 font-bold rounded-xl border-2 border-gray-200 hover:border-emerald-300 hover:shadow-lg transition-all hover:-translate-y-0.5 inline-flex items-center gap-2 text-sm">
-                  <FiHeart className="text-rose-500" /> Get Involved
-                </Link>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400 mb-8">
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 100% volunteer-driven</span>
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> 5 wards served</span>
-                <span className="flex items-center gap-1.5"><FiCheckCircle className="text-emerald-500" /> Open to all</span>
-              </div>
-
-              {/* Quick Access Cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <Link href="/helplines" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 hover:shadow-md transition-all hover:-translate-y-0.5">
-                  <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <FiPhone className="text-white text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-800">Helplines</p>
-                    <p className="text-[11px] text-gray-400">Emergency contacts</p>
-                  </div>
-                </Link>
-                <Link href="/blood-donors" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl border border-rose-100 hover:shadow-md transition-all hover:-translate-y-0.5">
-                  <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <FiDroplet className="text-white text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-800">Blood Donors</p>
-                    <p className="text-[11px] text-gray-400">Find donors nearby</p>
-                  </div>
-                </Link>
-                <Link href="/corporators" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-100 hover:shadow-md transition-all hover:-translate-y-0.5">
-                  <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <FiShield className="text-white text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-800">Corporators</p>
-                    <p className="text-[11px] text-gray-400">Your ward leaders</p>
-                  </div>
-                </Link>
-                <Link href="/wards" className="group flex items-center gap-3 p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-100 hover:shadow-md transition-all hover:-translate-y-0.5">
-                  <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <FiMapPin className="text-white text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-800">Wards</p>
-                    <p className="text-[11px] text-gray-400">Explore all 5 wards</p>
-                  </div>
-                </Link>
+              <div className="text-[9px] font-semibold tracking-[0.2em] uppercase text-white/50">
+                Local Directory
               </div>
             </div>
+          </Link>
 
-            {/* Right — Famous Local Businesses Banner (desktop) */}
-            <div className="hidden lg:block relative">
-              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 p-5 text-white relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
-                  <div className="relative">
-                    <p className="text-xs font-bold uppercase tracking-widest opacity-90 mb-1">🔥 Famous in Malad</p>
-                    <h2 className="text-xl font-extrabold">Local Business Directory</h2>
-                    <p className="text-xs opacity-80 mt-1">Discover the best spots in your neighbourhood</p>
+          <div className="hidden md:flex items-center gap-1">
+            <Link href="/directory" className="px-3.5 h-9 flex items-center text-[14px] font-semibold text-white/80 hover:text-white rounded-lg hover:bg-white/5 transition-all">
+              Discover
+            </Link>
+            <Link href="/list-business" className="px-3.5 h-9 flex items-center text-[14px] font-semibold text-white/80 hover:text-white rounded-lg hover:bg-white/5 transition-all">
+              For Businesses
+            </Link>
+            <div className="relative" onMouseEnter={() => setCommunityOpen(true)} onMouseLeave={() => setCommunityOpen(false)}>
+              <button className="px-3.5 h-9 flex items-center gap-1 text-[14px] font-semibold text-white/80 hover:text-white rounded-lg hover:bg-white/5 transition-all">
+                Community <FiChevronDown className={`text-sm transition-transform ${communityOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {communityOpen && (
+                <div className="absolute top-full right-0 pt-2 w-56">
+                  <div className="glass-surface rounded-xl overflow-hidden py-1.5" style={{ background: 'rgba(20,20,22,0.9)' }}>
+                    {communityLinks.map((l) => (
+                      <Link key={l.href} href={l.href} className="block px-4 py-2 text-[13.5px] text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                        {l.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
-
-                <div className="p-5 space-y-3">
-                  {businesses.filter(b => b.featured).slice(0, 2).map((biz) => (
-                    <BusinessCard key={biz.id} business={biz} variant="hero" />
-                  ))}
-
-                  <Link
-                    href="/directory/signup"
-                    className="mt-2 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all hover:-translate-y-0.5"
-                  >
-                    Sign Up to Explore All {businesses.length} Businesses →
-                  </Link>
-                  <p className="text-[10px] text-gray-400 text-center">
-                    Free signup · No spam · Instant access
-                  </p>
-                </div>
-              </div>
-
-              <div className="absolute -top-3 -right-3 bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-xs font-extrabold shadow-lg rotate-6">
-                NEW ✨
-              </div>
+              )}
             </div>
-          </div>
-
-          {/* Mobile — Business Directory Banner */}
-          <div className="lg:hidden mt-8 relative">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 p-4 text-white relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
-                <div className="relative">
-                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-90 mb-0.5">🔥 Famous in Malad</p>
-                  <h2 className="text-lg font-extrabold">Local Business Directory</h2>
-                  <p className="text-[11px] opacity-80 mt-0.5">Discover the best spots in your neighbourhood</p>
-                </div>
-              </div>
-
-              <div className="p-4 space-y-3">
-                {businesses.filter(b => b.featured).slice(0, 2).map((biz) => (
-                  <BusinessCard key={biz.id} business={biz} variant="hero" />
-                ))}
-
-                <Link
-                  href="/directory/signup"
-                  className="mt-2 w-full py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm hover:shadow-lg transition-all"
-                >
-                  Sign Up to Explore All {businesses.length} Businesses →
-                </Link>
-                <p className="text-[10px] text-gray-400 text-center">
-                  Free signup · No spam · Instant access
-                </p>
-              </div>
-            </div>
-
-            <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow-lg rotate-6">
-              NEW ✨
-            </div>
-          </div>
-
-          {/* Mobile Stats — Horizontal scroll */}
-          <div className="flex gap-3 mt-6 pb-2 overflow-x-auto lg:hidden scrollbar-hide">
-            {impactStats.slice(0, 4).map((stat) => (
-              <div key={stat.id} className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-md shadow-gray-100 border border-gray-100 min-w-[140px] text-center">
-                <span className="text-xl block mb-1">{stat.emoji}</span>
-                <div className="text-xl font-extrabold text-gray-800">{stat.value.toLocaleString()}{stat.suffix}</div>
-                <p className="text-[10px] text-gray-400 font-medium mt-0.5">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom gradient divider */}
-        <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400" />
-      </section>
-
-      {/* 2. Daily Quote */}
-      <section className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border-b border-amber-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <HiOutlineSparkles className="text-amber-500" />
-            <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">Thought of the Day</span>
-            <HiOutlineSparkles className="text-amber-500" />
-          </div>
-          <p className="text-lg sm:text-xl font-medium text-gray-700 italic leading-relaxed">
-            &ldquo;{quote.text}&rdquo;
-          </p>
-          <p className="text-sm text-amber-600 font-semibold mt-2">&mdash; {quote.author}</p>
-        </div>
-      </section>
-
-      {/* 3. Impact Dashboard */}
-      <section className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" />
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 right-0 w-72 h-72 bg-teal-400 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400 rounded-full blur-3xl" />
-            </div>
-            <div className="relative p-8 sm:p-12">
-              <div className="text-center mb-8">
-                <span className="inline-block px-3 py-1 bg-white/10 text-white/80 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Our Impact</span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">Making a Real Difference</h2>
-                <p className="text-gray-400 text-sm">Numbers that reflect our commitment to Malad</p>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                {impactStats.map((stat) => (
-                  <div key={stat.id} className="bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-white/10 text-center hover:bg-white/10 transition-colors">
-                    <span className="text-2xl mb-2 block">{stat.emoji}</span>
-                    <div className="text-xl font-extrabold text-white mb-1">{stat.value.toLocaleString()}{stat.suffix}</div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider leading-tight">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Recent Activities */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-extrabold text-gray-800">Recent Activities</h2>
-              <p className="text-gray-500 mt-1">Latest foundation work across Malad</p>
-            </div>
-            <Link href="/our-work" className="text-emerald-600 font-semibold hover:underline flex items-center gap-1">
-              View All <FiArrowRight />
+            <Link
+              href="/list-business"
+              className="ml-2 px-4 h-9 rounded-full text-[13.5px] font-bold text-white btn-cta flex items-center gap-1.5 active:scale-95"
+            >
+              List Your Business <FiArrowRight className="text-sm" />
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className="card p-6 card-hover">
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${activityCategoryColors[activity.category]}`}>
-                    {activityCategoryLabels[activity.category]}
-                  </span>
-                  {activity.wardNumber && (
-                    <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md">
-                      Ward {activity.wardNumber}
-                    </span>
-                  )}
-                </div>
-                <h3 className="font-bold text-gray-800 mb-2 line-clamp-2">{activity.title}</h3>
-                <p className="text-sm text-gray-500 line-clamp-2 mb-4">{activity.description}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <span className="flex items-center gap-1 text-xs text-gray-400">
-                    <FiCalendar /> {new Date(activity.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                      <FiUsers /> {activity.volunteersCount}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                      <FiHeart /> {activity.beneficiariesCount.toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 5. What is OneMalad */}
-      <section className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-center">
-            <div>
-              <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full mb-4 uppercase tracking-wider">About Us</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-6 leading-tight">
-                What is <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">OneMalad</span>?
-              </h2>
-              <div className="space-y-4 text-gray-600 leading-relaxed">
-                <p>
-                  <strong className="text-gray-800">OneMalad Foundation</strong> is a community-driven organization dedicated to serving the people of Malad.
-                  We believe that real change starts at the grassroots &mdash; through collective action, compassion, and consistent effort.
-                </p>
-                <p>
-                  From beach cleanups at Marve to health camps in Malwani, from food distribution during Ramadan to tree plantation drives on Madh Island &mdash;
-                  OneMalad brings together volunteers from all communities to make Malad a better place for everyone.
-                </p>
-                <p>
-                  We serve <strong>5 key wards</strong> (32, 33, 34, 48, 49) across P-North and P-South zones, representing over
-                  <strong> 4 lakh residents</strong> and their families. Our mission is simple: <em>One Malad, One Community, One Purpose.</em>
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3 mt-6">
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-lg">
-                  <FiCheckCircle className="text-emerald-600" />
-                  <span className="text-sm font-medium text-gray-700">100% Volunteer-Driven</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg">
-                  <FiCheckCircle className="text-green-600" />
-                  <span className="text-sm font-medium text-gray-700">All Communities United</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-lg">
-                  <FiCheckCircle className="text-purple-600" />
-                  <span className="text-sm font-medium text-gray-700">Transparent Impact</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Logo / Brand Card */}
-            <div className="flex justify-center">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 rounded-3xl blur-xl" />
-                <div className="relative bg-white rounded-3xl p-10 shadow-2xl border border-gray-100 text-center">
-                  <div className="w-24 h-24 bg-gradient-to-br from-emerald-600 to-teal-500 rounded-2xl flex items-center justify-center text-white text-4xl font-extrabold mx-auto mb-6 shadow-lg shadow-emerald-200">
-                    1
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-gray-800 mb-1">
-                    <span className="text-emerald-600">One</span><span className="text-teal-500">Malad</span>
-                  </h3>
-                  <p className="text-xs text-gray-400 uppercase tracking-[0.2em] mb-6">Community Foundation</p>
-                  <div className="space-y-3 text-left">
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                      <FiMapPin className="text-emerald-600 flex-shrink-0" />
-                      <span className="text-sm text-gray-600">5 Wards Served</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                      <FiUsers className="text-teal-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-600">500+ Volunteers</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                      <FiHeart className="text-pink-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-600">By Malad, For Malad</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Malad Wards */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Wards</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800">Malad Wards</h2>
-              <p className="text-gray-500 mt-1">The 5 wards we serve across Malad</p>
-            </div>
-            <Link href="/wards" className="text-emerald-600 font-semibold hover:underline flex items-center gap-1">
-              All Wards <FiArrowRight />
-            </Link>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {wardsData.map((ward) => {
-              const corp = corporatorsData.find((c) => c.wardNumber === ward.number);
-              return (
-                <Link key={ward.number} href={`/wards/${ward.number}`} className="card card-hover group overflow-hidden">
-                  {ward.image && (
-                    <img src={ward.image} alt={ward.name} className="w-full h-32 object-cover" />
-                  )}
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-800 group-hover:text-emerald-600 transition-colors mb-1">
-                      {ward.name}
-                    </h3>
-                    <p className="text-xs text-gray-400 mb-3">{ward.area}</p>
-                    {corp && (
-                      <div className="flex items-center gap-2 mb-3">
-                        {corp.photo ? (
-                          <img src={corp.photo} alt={corp.name} className="w-7 h-7 rounded-full object-cover" />
-                        ) : (
-                          <div className="w-7 h-7 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center text-emerald-700 text-xs font-bold">
-                            {corp.name.charAt(0)}
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-xs font-semibold text-gray-700">{corp.name}</p>
-                          <p className="text-[10px] text-gray-400">{corp.party}</p>
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs text-gray-400">{ward.population?.toLocaleString('en-IN')} residents</span>
-                      <span className="text-xs text-emerald-600 font-semibold group-hover:underline flex items-center gap-1">
-                        View <FiArrowRight />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* MyNagarSevak Promotion */}
-      <section className="py-12 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <span className="inline-block bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
-            For Your Ward
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-3">
-            Have an Issue in Your Ward?
-          </h2>
-          <p className="text-gray-500 max-w-xl mx-auto mb-6">
-            Report civic issues like potholes, water problems, garbage, streetlights, and more directly to your corporator through MyNagarSevak.
-          </p>
-          <a
-            href="https://mynagarsevak.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-orange-300/50 hover:-translate-y-0.5 transition-all duration-300 text-sm"
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden w-10 h-10 flex items-center justify-center text-white glass-surface rounded-full"
+            aria-label="Menu"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
-            Raise an Issue on MyNagarSevak.in
-          </a>
+            {mobileOpen ? <FiX className="text-lg" /> : <FiMenu className="text-lg" />}
+          </button>
         </div>
-      </section>
 
-      {/* 7. Discover Malad */}
-      <section className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <span className="inline-block px-3 py-1 bg-teal-50 text-teal-600 text-xs font-bold rounded-full mb-4 uppercase tracking-wider">Explore</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-3">
-              Discover <span className="bg-gradient-to-r from-teal-500 to-emerald-600 bg-clip-text text-transparent">Malad</span>
-            </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">From historic forts and serene beaches to vibrant markets and community landmarks &mdash; explore what makes Malad special</p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                slug: 'marve-beach',
-                title: 'Marve Beach',
-                ward: 32,
-                image: 'https://mumbaitourism.travel/images/places-to-visit/headers/marve-beach-mumbai-tourism-entry-fee-timings-holidays-reviews-header.jpg',
-                desc: 'A serene getaway at the tip of Malad West. Known for its calm shores, stunning sunsets, and the iconic ferry service to Manori and Essel World.',
-                tag: 'Beach',
-                tagColor: 'bg-cyan-50 text-cyan-700',
-              },
-              {
-                slug: 'madh-fort',
-                title: 'Madh Fort',
-                ward: 49,
-                image: 'https://media3.thrillophilia.com/filestore/klmq0f5fn2qknwzlnoksjnvmo976_1573213125_madh-fort-mumbai-1920x1434.jpg',
-                desc: 'A 17th-century Portuguese watchtower standing guard over the Arabian Sea with panoramic ocean views and rich history.',
-                tag: 'Heritage',
-                tagColor: 'bg-amber-50 text-amber-700',
-              },
-              {
-                slug: 'malwani',
-                title: 'Malwani',
-                ward: 34,
-                image: 'https://media3.thrillophilia.com/filestore/fx2oqw5y8nllsmkoaco390nn68nd_shutterstock_1980977681.jpg',
-                desc: 'The heart of Malad\'s community life. Famous Malwani cuisine, bustling Gate 6 & Gate 7, and one of Mumbai\'s most culturally rich neighbourhoods.',
-                tag: 'Community',
-                tagColor: 'bg-purple-50 text-purple-700',
-              },
-              {
-                slug: 'aksa-beach',
-                title: 'Aksa Beach',
-                ward: 49,
-                image: 'https://media3.thrillophilia.com/filestore/8ernb5ogs4w98zn5fftrc8pgnrbw_shutterstock_1271510506.jpg',
-                desc: 'A peaceful stretch of golden sand between Malad and Madh Island. Perfect for evening strolls, picnics, and escaping the city chaos.',
-                tag: 'Beach',
-                tagColor: 'bg-cyan-50 text-cyan-700',
-              },
-              {
-                slug: 'st-bonaventure-church',
-                title: 'St. Bonaventure Church',
-                ward: 49,
-                image: 'https://media3.thrillophilia.com/filestore/sh6vouszgvfcrgk939fyngwoqzb0_shutterstock_1924548245.jpg',
-                desc: 'A 16th-century Portuguese church on Madh Island with beautiful stained glass windows. One of the oldest churches in Mumbai.',
-                tag: 'Heritage',
-                tagColor: 'bg-amber-50 text-amber-700',
-              },
-            ].map((place) => (
-              <Link key={place.slug} href={`/discover/${place.slug}`} className="group">
-                <div className="card overflow-hidden card-hover h-full">
-                  <div className="h-44 overflow-hidden relative">
-                    <img
-                      src={place.image}
-                      alt={place.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${place.tagColor}`}>{place.tag}</span>
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">{place.title}</h3>
-                      <span className="text-[10px] text-gray-400 font-medium ml-auto">Ward {place.ward}</span>
-                    </div>
-                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{place.desc}</p>
-                    <span className="inline-flex items-center gap-1 text-xs text-emerald-600 font-semibold mt-3 group-hover:underline">
-                      Read More <FiArrowRight className="text-[10px]" />
-                    </span>
-                  </div>
-                </div>
+        {mobileOpen && (
+          <div className="md:hidden pb-4 pt-2 space-y-1">
+            <Link href="/directory" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-white/90 font-semibold text-[14px] hover:bg-white/5">Discover</Link>
+            <Link href="/list-business" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-white/90 font-semibold text-[14px] hover:bg-white/5">For Businesses</Link>
+            <div className="px-3 pt-2 text-[11px] uppercase tracking-widest font-bold text-white/40">Community</div>
+            {communityLinks.map((l) => (
+              <Link key={l.href} href={l.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-lg text-white/70 text-[13.5px] hover:bg-white/5 hover:text-white">
+                {l.label}
               </Link>
             ))}
+            <Link
+              href="/list-business"
+              onClick={() => setMobileOpen(false)}
+              className="block mt-3 btn-cta h-11 rounded-full text-center leading-[44px] text-white font-bold text-[14px]"
+            >
+              List Your Business
+            </Link>
           </div>
-        </div>
-      </section>
+        )}
+      </div>
+    </nav>
+  );
+}
 
-      {/* 8. Unity in Diversity */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <span className="inline-block px-3 py-1 bg-pink-100 text-pink-600 text-xs font-bold rounded-full mb-4 uppercase tracking-wider">Our Pride</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-3">
-              One Malad, <span className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 bg-clip-text text-transparent">All Faiths</span>
-            </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
-              Malad is known across Mumbai for its beautiful unity &mdash; where Hindu, Muslim, Christian, Sikh, and Buddhist families
-              live together as one community, celebrating every festival together with love and respect.
+/* ---------------- HERO ---------------- */
+
+function Hero() {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const phrases = ['cafes.', 'waffles.', 'salons.', 'gyms.', 'biryani.', 'everything.'];
+
+  useEffect(() => {
+    const t = setInterval(() => setPhraseIdx((i) => (i + 1) % phrases.length), 2200);
+    return () => clearInterval(t);
+  }, [phrases.length]);
+
+  return (
+    <section className="relative min-h-[100dvh] pt-28 pb-16 overflow-hidden flex items-center">
+      {/* Ambient glows */}
+      <div className="absolute -top-20 -left-20 w-[55%] h-[55%] rounded-full blur-3xl opacity-40 bokeh-1"
+        style={{ background: 'radial-gradient(circle, #ff6b35 0%, transparent 65%)' }} />
+      <div className="absolute -bottom-10 -right-10 w-[60%] h-[60%] rounded-full blur-3xl opacity-30 bokeh-2"
+        style={{ background: 'radial-gradient(circle, #b06ab3 0%, transparent 65%)' }} />
+      <div className="absolute top-[30%] right-[10%] w-64 h-64 rounded-full blur-3xl opacity-25 bokeh-3"
+        style={{ background: 'radial-gradient(circle, #f5c451 0%, transparent 65%)' }} />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 w-full">
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-surface text-[11px] uppercase tracking-[0.18em] font-bold text-white/70 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+              {businesses.length}+ local businesses · Malad
+            </div>
+            <h1 className="font-black text-[44px] sm:text-[58px] lg:text-[72px] leading-[0.95] tracking-[-0.03em] text-white">
+              Scroll your<br />neighborhood for
+              <br />
+              <span
+                key={phraseIdx}
+                className="inline-block bg-clip-text text-transparent animate-fade-in-up"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ff6b35 0%, #f5c451 100%)' }}
+              >
+                {phrases[phraseIdx]}
+              </span>
+            </h1>
+            <p className="mt-6 text-white/70 text-[16px] sm:text-[17px] leading-relaxed max-w-[520px]">
+              TikTok-style discovery for Malad. Swipe through hand-picked cafes, salons, gyms,
+              and hidden gems. Save favourites. Message them on WhatsApp in one tap.
             </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-            {[
-              {
-                festival: 'Eid ul-Fitr',
-                emoji: '\u{1F31F}',
-                community: 'Muslim',
-                desc: 'Malwani comes alive with the spirit of Eid. Families prepare sheer khurma and biryani, mosques overflow with prayers, and neighbours of all faiths visit each other\'s homes to share sweets and warm wishes.',
-                gradient: 'from-emerald-500 to-teal-600',
-                bg: 'bg-emerald-50',
-              },
-              {
-                festival: 'Ganesh Chaturthi',
-                emoji: '\u{1F406}',
-                community: 'Hindu',
-                desc: 'The thunderous beats of dhol-tasha echo through every lane as Ganpati Bappa arrives. From small home mandaps to grand community pandals, all of Malad comes together for the 10-day celebration.',
-                gradient: 'from-orange-500 to-red-500',
-                bg: 'bg-orange-50',
-              },
-              {
-                festival: 'Christmas',
-                emoji: '\u{1F384}',
-                community: 'Christian',
-                desc: 'Madh Island and Malwani\'s East Indian community deck up homes with stars and lights. Midnight Mass at St. Bonaventure Church and carol singing unite the neighbourhood in Christmas joy.',
-                gradient: 'from-red-500 to-rose-600',
-                bg: 'bg-red-50',
-              },
-              {
-                festival: 'Diwali',
-                emoji: '\u{1FA94}',
-                community: 'Hindu',
-                desc: 'The festival of lights transforms Malad into a sparkling wonderland. Rangoli competitions, laxmi puja, and sharing faral with every neighbour regardless of religion make Diwali truly special.',
-                gradient: 'from-amber-500 to-yellow-500',
-                bg: 'bg-amber-50',
-              },
-            ].map((f) => (
-              <div key={f.festival} className={`card p-6 card-hover ${f.bg} border-0`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${f.gradient} rounded-xl flex items-center justify-center text-2xl shadow-md`}>
-                    {f.emoji}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-800">{f.festival}</h3>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">{f.community}</p>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-10">
-            {[
-              { name: 'Holi', emoji: '\u{1F308}', desc: 'Festival of Colours' },
-              { name: 'Muharram', emoji: '\u{1F54C}', desc: 'Tazia processions' },
-              { name: 'Navratri', emoji: '\u{1F483}', desc: 'Garba & Dandiya nights' },
-              { name: 'Easter', emoji: '\u{2728}', desc: 'Resurrection Sunday' },
-              { name: 'Buddha Purnima', emoji: '\u{1F4AE}', desc: 'Peace & wisdom' },
-              { name: 'Guru Nanak Jayanti', emoji: '\u{1F64F}', desc: 'Langar & seva' },
-            ].map((f) => (
-              <div key={f.name} className="card p-4 text-center card-hover">
-                <span className="text-3xl block mb-2">{f.emoji}</span>
-                <p className="text-sm font-bold text-gray-800">{f.name}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600" />
-            <div className="absolute inset-0">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/4" />
-            </div>
-            <div className="relative px-8 sm:px-16 py-10 sm:py-14 text-center">
-              <p className="text-xl sm:text-2xl font-bold text-white leading-relaxed max-w-3xl mx-auto">
-                &ldquo;In Malad, we don&rsquo;t ask which religion our neighbour follows &mdash; we ask what time to bring the biryani for their festival.&rdquo;
-              </p>
-              <p className="text-sm text-white/70 mt-4 font-medium">&mdash; The Spirit of Malad</p>
-              <div className="flex justify-center gap-3 mt-6">
-                <span className="text-3xl">&#x1F54C;</span>
-                <span className="text-3xl">&#x1F6D5;</span>
-                <span className="text-3xl">&#x26EA;</span>
-                <span className="text-3xl">&#x1F64F;</span>
-                <span className="text-3xl">&#x2638;</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. Upcoming Events */}
-      {upcomingEvents.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-extrabold text-gray-800">Upcoming Events</h2>
-                <p className="text-gray-500 mt-1">Foundation events and community gatherings</p>
-              </div>
-              <Link href="/events" className="text-emerald-600 font-semibold hover:underline flex items-center gap-1">
-                All Events <FiArrowRight />
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/directory"
+                className="btn-cta h-14 px-7 rounded-full text-white font-bold text-[15px] flex items-center justify-center gap-2 active:scale-[0.98]"
+              >
+                Start Exploring <FiArrowRight className="text-lg" />
+              </Link>
+              <Link
+                href="/list-business"
+                className="h-14 px-7 rounded-full glass-surface text-white font-semibold text-[15px] flex items-center justify-center gap-2 active:scale-[0.98]"
+              >
+                List your business <FiArrowUpRight />
               </Link>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className="card p-6 card-hover">
-                  <span className="inline-block px-2.5 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-md mb-3 capitalize">
-                    {event.category}
-                  </span>
-                  <h3 className="font-bold text-gray-800 mb-2">{event.title}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-4">{event.description}</p>
-                  <div className="space-y-2 pt-3 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <FiCalendar /> {new Date(event.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <HiOutlineLocationMarker /> {event.location}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <FiUsers /> {event.attendees} expected
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-8 flex items-center gap-5 text-[12px] text-white/50">
+              <span className="flex items-center gap-1.5"><FiCheck className="text-emerald-400" /> Free for users</span>
+              <span className="flex items-center gap-1.5"><FiCheck className="text-emerald-400" /> Hyper-local</span>
+              <span className="flex items-center gap-1.5"><FiCheck className="text-emerald-400" /> WhatsApp ready</span>
             </div>
           </div>
-        </section>
+
+          {/* Phone mockup preview */}
+          <PhonePreview />
+        </div>
+      </div>
+
+      {/* Scroll cue */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/40 text-[11px] uppercase tracking-[0.2em] font-semibold flex flex-col items-center gap-2 animate-bounce" style={{ animationDuration: '2.4s' }}>
+        Scroll
+        <span className="w-px h-6 bg-white/30" />
+      </div>
+    </section>
+  );
+}
+
+function PhonePreview() {
+  const picks = businesses.filter((b) => b.featured).slice(0, 3);
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    if (picks.length === 0) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % picks.length), 3200);
+    return () => clearInterval(t);
+  }, [picks.length]);
+  if (picks.length === 0) return null;
+  const b = picks[idx];
+  const icon = categoryIcons[b.category] || '📌';
+
+  return (
+    <div className="relative mx-auto w-[280px] sm:w-[320px] aspect-[9/19.5] rounded-[48px] overflow-hidden"
+      style={{
+        border: '10px solid #1a1a1d',
+        boxShadow: '0 40px 80px -20px rgba(255,107,53,0.35), 0 20px 40px rgba(0,0,0,0.6)',
+      }}
+    >
+      <div className={`absolute inset-0 cat-bg-${b.category} transition-all duration-700`}>
+        <div className="absolute top-[15%] left-[20%] w-40 h-40 rounded-full bg-white/10 blur-3xl bokeh-1" />
+        <div className="absolute bottom-[25%] right-[15%] w-48 h-48 rounded-full bg-white/10 blur-3xl bokeh-2" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-[140px] opacity-30">{icon}</span>
+        </div>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%)' }} />
+      </div>
+
+      {/* Top chip */}
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-black text-white"
+            style={{ background: 'linear-gradient(135deg, #ff6b35, #ff8e53)' }}>1</div>
+          <span className="text-white text-[11px] font-black tracking-tight">onemalad.in</span>
+        </div>
+        <span className="glass-surface w-7 h-7 rounded-full flex items-center justify-center text-white">
+          <FiSearch className="text-xs" />
+        </span>
+      </div>
+
+      {/* Action rail */}
+      <div className="absolute right-3 bottom-[140px] flex flex-col gap-3.5 items-center">
+        <span className="w-9 h-9 rounded-full glass-surface flex items-center justify-center text-white"><FiHeart className="text-sm" /></span>
+        <span className="w-9 h-9 rounded-full flex items-center justify-center text-white" style={{ background: '#25d366' }}><FaWhatsapp className="text-sm" /></span>
+        <span className="w-9 h-9 rounded-full flex items-center justify-center text-[#041816]" style={{ background: '#4ecdc4' }}><FiPhone className="text-xs" /></span>
+      </div>
+
+      {/* Bottom info */}
+      <div className="absolute left-3 right-14 bottom-4 space-y-1.5">
+        {b.featured && (
+          <span className="badge-featured inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider">⭐ Featured</span>
+        )}
+        <h3 className="text-white font-extrabold text-[15px] leading-tight" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+          {b.name}
+        </h3>
+        <div className="flex items-center gap-2 text-[10px] text-white/80">
+          <FiStar className="fill-yellow-400 text-yellow-400" />
+          <span className="font-bold">{b.rating}</span>
+          <span className="text-white/50">·</span>
+          <span>{b.area}</span>
+        </div>
+        <div className="btn-cta h-8 rounded-lg flex items-center justify-center text-white text-[11px] font-bold mt-2">
+          Get Details →
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- FEED PREVIEW (horizontal scroll) ---------------- */
+
+function FeedPreview() {
+  const picks = businesses.slice(0, 8);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <section className="relative py-20 sm:py-24">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-8 flex items-end justify-between gap-4">
+        <div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange-400">Malad · Live feed</span>
+          <h2 className="text-white font-black text-[28px] sm:text-[40px] tracking-[-0.02em] mt-2 leading-tight">
+            What&apos;s on in Malad, right now.
+          </h2>
+        </div>
+        <Link href="/directory" className="hidden sm:inline-flex items-center gap-1 text-[13.5px] font-semibold text-white/70 hover:text-white">
+          See all <FiArrowRight />
+        </Link>
+      </div>
+
+      <div
+        ref={scrollerRef}
+        className="hide-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 px-5 sm:px-6"
+        style={{ scrollPadding: '0 24px' }}
+      >
+        {picks.map((b) => (
+          <MiniReelCard key={b.id} business={b} />
+        ))}
+        <div className="w-[2px] flex-shrink-0" />
+      </div>
+
+      <div className="mt-8 text-center">
+        <Link
+          href="/directory"
+          className="inline-flex items-center gap-2 btn-cta h-12 px-6 rounded-full text-white font-bold text-[14px] active:scale-[0.98]"
+        >
+          Open the Feed <FiArrowRight />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function MiniReelCard({ business }: { business: typeof businesses[number] }) {
+  const icon = categoryIcons[business.category] || '📌';
+  return (
+    <Link
+      href={`/directory#${business.id}`}
+      className={`cat-bg-${business.category} snap-start flex-shrink-0 relative w-[240px] sm:w-[260px] aspect-[9/16] rounded-3xl overflow-hidden group active:scale-[0.98] transition-transform`}
+    >
+      <div className="absolute top-[15%] left-[15%] w-32 h-32 rounded-full bg-white/10 blur-3xl bokeh-1" />
+      <div className="absolute bottom-[25%] right-[10%] w-40 h-40 rounded-full bg-white/10 blur-3xl bokeh-2" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-[110px] opacity-30">{icon}</span>
+      </div>
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.85) 100%)' }} />
+
+      {business.featured && (
+        <span className="badge-featured absolute top-3 left-3 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider">
+          ⭐ Featured
+        </span>
       )}
 
-      {/* 10. Why OneMalad */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-3">Why OneMalad?</h2>
-            <p className="text-gray-500 max-w-xl mx-auto">Be part of the change you want to see in your neighbourhood</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: 'Community Service', desc: 'Regular cleanliness drives, health camps, and food distribution across all 5 wards.', icon: <FiHeart className="text-2xl" />, color: 'from-emerald-500 to-emerald-600' },
-              { title: 'Unity in Action', desc: 'Bringing together people from all communities and faiths to serve as one Malad.', icon: <FiUsers className="text-2xl" />, color: 'from-teal-500 to-green-500' },
-              { title: 'Youth Empowerment', desc: 'Engaging the next generation through sports, education, and digital literacy programs.', icon: <FiArrowRight className="text-2xl" />, color: 'from-amber-500 to-orange-500' },
-              { title: 'Transparent Impact', desc: 'Every activity documented with real numbers. See our work, verify our impact.', icon: <FiCheckCircle className="text-2xl" />, color: 'from-purple-500 to-indigo-500' },
-            ].map((item) => (
-              <div key={item.title} className="card p-6 card-hover text-center group">
-                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-white mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                  {item.icon}
+      <div className="absolute left-4 right-4 bottom-4 space-y-1.5">
+        <div className="flex items-center gap-1.5 text-[11px] text-white/80 font-semibold uppercase tracking-wider">
+          <span>{icon} {business.category}</span>
+          <span className="text-white/40">·</span>
+          <span className="flex items-center gap-0.5">
+            <FiStar className="fill-yellow-400 text-yellow-400 text-[10px]" /> {business.rating}
+          </span>
+        </div>
+        <h3 className="text-white font-extrabold text-[17px] leading-tight">{business.name}</h3>
+        <div className="flex items-center gap-1 text-[11px] text-white/60">
+          <FiMapPin className="text-[10px]" /> {business.area}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ---------------- CATEGORIES ---------------- */
+
+function CategoriesStrip() {
+  return (
+    <section className="py-16 sm:py-20 relative">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="mb-10">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange-400">Categories</span>
+          <h2 className="text-white font-black text-[28px] sm:text-[40px] tracking-[-0.02em] mt-2 leading-tight">
+            Find everything in Malad.
+          </h2>
+          <p className="text-white/60 text-[14.5px] mt-2 max-w-[520px]">
+            Pick what you&apos;re in the mood for. We&apos;ll show you the best within 3 km.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {businessCategories.map((cat) => {
+            const count = businesses.filter((b) => b.category === cat.id).length;
+            return (
+              <Link
+                key={cat.id}
+                href={`/directory`}
+                className={`cat-bg-${cat.id} relative aspect-[4/3] sm:aspect-square rounded-3xl p-5 flex flex-col justify-between group overflow-hidden hover:scale-[1.02] transition-transform`}
+              >
+                <div className="absolute top-[20%] left-[20%] w-24 h-24 rounded-full bg-white/15 blur-2xl bokeh-1" />
+                <div className="absolute bottom-[20%] right-[10%] w-20 h-20 rounded-full bg-white/10 blur-2xl bokeh-2" />
+                <div className="relative text-[44px] opacity-90 drop-shadow-lg">{cat.icon}</div>
+                <div className="relative">
+                  <div className="text-white font-extrabold text-[16px] leading-tight drop-shadow">{cat.label}</div>
+                  <div className="text-white/70 text-[11px] font-semibold mt-1">{count} listed</div>
                 </div>
-                <h3 className="font-bold text-gray-800 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                <FiArrowUpRight className="absolute top-4 right-4 text-white/60 group-hover:text-white text-lg transition-colors" />
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- FEATURED ---------------- */
+
+function FeaturedCarousel() {
+  const featured = businesses.filter((b) => b.featured);
+  if (featured.length === 0) return null;
+
+  return (
+    <section className="py-16 sm:py-20 relative">
+      <div
+        className="absolute inset-x-0 inset-y-8 blur-3xl opacity-20 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at center, rgba(245,196,81,0.3) 0%, transparent 60%)' }}
+      />
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 relative">
+        <div className="mb-10 flex items-end justify-between gap-4">
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: '#f5c451' }}>
+              ⭐ Top of Malad
+            </span>
+            <h2 className="text-white font-black text-[28px] sm:text-[40px] tracking-[-0.02em] mt-2 leading-tight">
+              Hand-picked by locals.
+            </h2>
+          </div>
+        </div>
+
+        <div className="hide-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 sm:-mx-6 px-5 sm:px-6">
+          {featured.map((b) => (
+            <FeaturedCard key={b.id} business={b} />
+          ))}
+          <div className="w-[2px] flex-shrink-0" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturedCard({ business }: { business: typeof businesses[number] }) {
+  const icon = categoryIcons[business.category] || '📌';
+  return (
+    <Link
+      href={`/directory#${business.id}`}
+      className={`cat-bg-${business.category} snap-start flex-shrink-0 relative w-[280px] sm:w-[320px] aspect-[3/4] rounded-[28px] overflow-hidden group active:scale-[0.98] transition-transform`}
+      style={{
+        border: '1px solid rgba(245,196,81,0.3)',
+        boxShadow: '0 20px 50px -10px rgba(245,196,81,0.12), 0 4px 20px rgba(0,0,0,0.4)',
+      }}
+    >
+      <div className="absolute top-[15%] left-[15%] w-32 h-32 rounded-full bg-white/10 blur-3xl bokeh-1" />
+      <div className="absolute bottom-[25%] right-[10%] w-40 h-40 rounded-full bg-white/10 blur-3xl bokeh-2" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-[130px] opacity-30">{icon}</span>
+      </div>
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.85) 100%)' }} />
+
+      <span className="badge-featured absolute top-4 left-4 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+        ⭐ Featured
+      </span>
+
+      <div className="absolute left-5 right-5 bottom-5 space-y-2">
+        <div className="text-[11px] font-bold uppercase tracking-wider text-white/70">
+          {icon} {business.category} · {business.priceRange}
+        </div>
+        <h3 className="text-white font-black text-[20px] leading-tight tracking-tight">{business.name}</h3>
+        <p className="text-white/70 text-[12.5px] italic line-clamp-2">{business.tagline}</p>
+        <div className="flex items-center gap-3 text-[12px] text-white/80 pt-1">
+          <span className="flex items-center gap-1"><FiStar className="fill-yellow-400 text-yellow-400" />{business.rating}</span>
+          <span className="text-white/30">·</span>
+          <span className="flex items-center gap-1"><FiMapPin className="text-xs" />{business.area}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ---------------- FOR BUSINESSES ---------------- */
+
+function ForBusinessesSection() {
+  const stats = [
+    { k: '10,000+', v: 'Malad locals / month' },
+    { k: `${businesses.length}+`, v: 'active listings' },
+    { k: '1-tap', v: 'to WhatsApp' },
+    { k: '₹299', v: 'to start' },
+  ];
+  const benefits = [
+    'Showcase your business to 10,000+ Malad locals',
+    'Direct WhatsApp & call buttons — every view is a potential customer',
+    'Featured placement in the Reels-style feed',
+    'Offer banner with expiry — drive limited-time urgency',
+    'Real-time analytics (views, saves, WhatsApp clicks)',
+    'No commission on orders — 100% is yours',
+  ];
+
+  return (
+    <section className="py-20 sm:py-28 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at 80% 20%, #ff6b35 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, #b06ab3 0%, transparent 50%)' }} />
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 relative">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-orange-400">For Business Owners</span>
+            <h2 className="text-white font-black text-[30px] sm:text-[44px] tracking-[-0.02em] mt-3 leading-[0.95]">
+              Your shop,<br />in front of Malad.
+            </h2>
+            <p className="text-white/70 text-[15.5px] mt-5 leading-relaxed max-w-[480px]">
+              Every day, hundreds of people in Malad search for where to eat, get their hair cut, or find a gym.
+              Put your business where they&apos;re already looking.
+            </p>
+
+            <ul className="mt-7 space-y-3">
+              {benefits.map((b) => (
+                <li key={b} className="flex items-start gap-3 text-[14.5px] text-white/80">
+                  <span className="w-5 h-5 mt-0.5 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #ff6b35, #ff8e53)' }}>
+                    <FiCheck className="text-white text-xs" />
+                  </span>
+                  {b}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <Link href="/list-business" className="btn-cta h-[52px] px-7 rounded-full text-white font-bold text-[15px] inline-flex items-center justify-center gap-2 active:scale-[0.98]">
+                See Plans & Pricing <FiArrowRight />
+              </Link>
+              <a
+                href="https://wa.me/919820455678?text=Hi%2C%20I%20want%20to%20list%20my%20business%20on%20OneMalad.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-[52px] px-7 rounded-full glass-surface text-white font-semibold text-[15px] inline-flex items-center justify-center gap-2 active:scale-[0.98]"
+              >
+                <FaWhatsapp /> Talk to us
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {stats.map((s) => (
+              <div
+                key={s.v}
+                className="glass-surface rounded-2xl p-6 text-center"
+                style={{ background: 'rgba(20,20,22,0.6)' }}
+              >
+                <div className="text-white font-black text-[28px] sm:text-[32px] tracking-tight"
+                  style={{ backgroundImage: 'linear-gradient(135deg, #ff6b35, #f5c451)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  {s.k}
+                </div>
+                <div className="text-white/60 text-[12px] font-semibold uppercase tracking-wider mt-1">{s.v}</div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* 11. Volunteer CTA */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-800" />
-            <div className="absolute inset-0">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
-              <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/3" />
-            </div>
-            <div className="relative px-8 sm:px-16 py-16 sm:py-20 text-center">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
-                Join the OneMalad Movement
-              </h2>
-              <p className="text-lg text-emerald-100/80 max-w-2xl mx-auto mb-10">
-                Volunteer with us, attend our events, and help build the Malad we all deserve. Every hand makes a difference.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link href="/volunteer" className="px-8 py-4 bg-white text-gray-900 font-bold rounded-xl text-lg hover:shadow-2xl hover:shadow-white/20 transition-all hover:-translate-y-1 inline-flex items-center gap-2">
-                  Become a Volunteer <FiHeart />
-                </Link>
-                <Link href="/our-work" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg border border-white/20 hover:bg-white/20 transition-all inline-flex items-center gap-2">
-                  View Our Work <FiArrowRight />
-                </Link>
+/* ---------------- COMMUNITY STRIP ---------------- */
+
+function CommunityStrip() {
+  const links = [
+    { href: '/our-work', label: 'Our Work', desc: 'Foundation activities & drives' },
+    { href: '/wards', label: '5 Wards', desc: 'Local ward updates & corporators' },
+    { href: '/helplines', label: 'Helplines', desc: 'Emergency numbers' },
+    { href: '/blood-donors', label: 'Blood Donors', desc: 'Find donors in your area' },
+    { href: '/volunteer', label: 'Volunteer', desc: 'Serve your community' },
+    { href: '/events', label: 'Events', desc: 'Community events calendar' },
+  ];
+  return (
+    <section className="py-16 sm:py-20 relative border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-surface text-[11px] uppercase tracking-[0.18em] font-bold text-white/70">
+            <FiHeart className="text-orange-400" />
+            Also powered by OneMalad
+          </div>
+          <h2 className="text-white font-black text-[24px] sm:text-[34px] tracking-[-0.02em] mt-4 leading-tight max-w-2xl mx-auto">
+            Born from civic work. Built for Malad.
+          </h2>
+          <p className="text-white/60 text-[14px] mt-3 max-w-xl mx-auto">
+            OneMalad started as a community foundation. We still serve Malad&apos;s families, wards, and neighbourhoods — alongside building this directory.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="glass-surface rounded-2xl p-4 sm:p-5 group hover:bg-white/[0.03] transition-all"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="text-white font-bold text-[14.5px]">{l.label}</div>
+                  <div className="text-white/50 text-[12px] mt-0.5">{l.desc}</div>
+                </div>
+                <FiArrowUpRight className="text-white/40 group-hover:text-white flex-shrink-0 transition-colors" />
               </div>
-              <p className="text-sm text-emerald-200/50 mt-6">No registration needed. Just show up and serve.</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- FOOTER ---------------- */
+
+function DarkFooter() {
+  return (
+    <footer className="pt-16 pb-10 border-t border-white/5" style={{ background: '#070708' }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="grid md:grid-cols-4 gap-10 mb-12">
+          <div>
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-black text-sm"
+                style={{ background: 'linear-gradient(135deg, #ff6b35, #ff8e53)' }}>
+                1
+              </div>
+              <span className="text-white font-black text-[17px] tracking-tight">
+                One<span className="text-orange-400">Malad</span>
+              </span>
             </div>
+            <p className="text-white/60 text-[13.5px] leading-relaxed">
+              The local directory for Malad. Discover, connect, and support your neighbourhood — one swipe at a time.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-white/90 font-bold text-[12px] uppercase tracking-widest mb-4">Directory</h4>
+            <ul className="space-y-2.5 text-[13.5px]">
+              <li><Link href="/directory" className="text-white/60 hover:text-white">Discover</Link></li>
+              <li><Link href="/list-business" className="text-white/60 hover:text-white">List your business</Link></li>
+              <li><Link href="/directory/signup" className="text-white/60 hover:text-white">Sign up</Link></li>
+              <li><Link href="/directory/login" className="text-white/60 hover:text-white">Sign in</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white/90 font-bold text-[12px] uppercase tracking-widest mb-4">Community</h4>
+            <ul className="space-y-2.5 text-[13.5px]">
+              <li><Link href="/our-work" className="text-white/60 hover:text-white">Our Work</Link></li>
+              <li><Link href="/wards" className="text-white/60 hover:text-white">Wards</Link></li>
+              <li><Link href="/helplines" className="text-white/60 hover:text-white">Helplines</Link></li>
+              <li><Link href="/volunteer" className="text-white/60 hover:text-white">Volunteer</Link></li>
+              <li><Link href="/blood-donors" className="text-white/60 hover:text-white">Blood Donors</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white/90 font-bold text-[12px] uppercase tracking-widest mb-4">Connect</h4>
+            <ul className="space-y-2.5 text-[13.5px]">
+              <li><a href="https://wa.me/919820455678" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white">WhatsApp</a></li>
+              <li><a href="https://instagram.com/onemalad" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white">Instagram</a></li>
+              <li><Link href="/corporators" className="text-white/60 hover:text-white">Corporators</Link></li>
+              <li><Link href="/events" className="text-white/60 hover:text-white">Events</Link></li>
+            </ul>
           </div>
         </div>
-      </section>
-    </>
+        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-white/40">
+          <span>© {new Date().getFullYear()} OneMalad. Built in Mumbai.</span>
+          <span>Made with <FiHeart className="inline text-orange-400" /> for Malad.</span>
+        </div>
+      </div>
+    </footer>
   );
 }

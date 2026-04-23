@@ -15,7 +15,7 @@ export default function Navbar() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
-  if (pathname === '/directory') return null;
+  if (pathname === '/directory' || pathname === '/' || pathname === '/list-business') return null;
 
   const navLinks = [
     { href: '/', label: 'Home' },

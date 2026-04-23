@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import ConditionalFooter from '@/components/layout/ConditionalFooter';
 import JsonLd from '@/components/seo/JsonLd';
 import './globals.css';
+import './directory-theme.css';
 
 const SITE_URL = 'https://onemalad.in';
 const SITE_NAME = 'OneMalad';

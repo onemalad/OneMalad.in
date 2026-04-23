@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import './directory.css';
+import '../directory-theme.css';
 
 export const metadata: Metadata = {
   title: 'Directory — Local businesses of Malad',
